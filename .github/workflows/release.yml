@@ -23,8 +23,8 @@ jobs:
         run: |
           npm install
           npm run build
-          # Create a zip file for manual installation, preserving the directory structure
-          (cd dist && zip -r ../murmur-plugin.zip .)
+          # Create a zip file named murmur.zip
+          (cd dist && zip -r ../murmur.zip .)
 
       - name: Create Release
         id: create_release
@@ -34,7 +34,7 @@ jobs:
             dist/main.js
             dist/manifest.json
             dist/versions.json
-            murmur-plugin.zip
+            murmur.zip
           draft: false
           prerelease: false
           generate_release_notes: true

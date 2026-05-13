@@ -40,10 +40,10 @@ Murmur uses a unique set of terminologies to describe its functional components:
 4. Click **Install**, then **Enable**.
 
 ### Manual Installation
-1. Download the latest release from the [GitHub Releases](https://github.com/fanxiaofang/obsidian-murmur/releases).
-2. Create a folder named `murmur` in your vault's `.obsidian/plugins/` directory.
-3. Extract `main.js`, `manifest.json`, and the `audio` folder into that directory.
-4. Reload Obsidian and enable the plugin.
+1. Download the latest `murmur.zip` from the [GitHub Releases](https://github.com/fanxiaofang/obsidian-murmur/releases).
+2. Extract the contents of the zip file into your vault's `.obsidian/plugins/murmur` directory (create the `murmur` folder if it doesn't exist).
+3. Ensure that `main.js`, `manifest.json`, and the `audio` folder are all placed directly inside the `murmur` folder.
+4. Reload Obsidian and enable the plugin in **Community plugins**.
 
 ## How to Use
 
@@ -101,10 +101,10 @@ Murmur 使用了一套独特的术语来描述其功能组件：
 4. 点击 **安装**，然后 **启用**。
 
 ### 手动安装
-1. 从 [GitHub Releases](https://github.com/fanxiaofang/obsidian-murmur/releases) 下载最新发布版。
-2. 在您库的 `.obsidian/plugins/` 目录下创建一个名为 `murmur` 的文件夹。
-3. 将 `main.js`, `manifest.json` 和 `audio` 文件夹解压到该目录。
-4. 重启 Obsidian 并启用插件。
+1. 从 [GitHub Releases](https://github.com/fanxiaofang/obsidian-murmur/releases) 下载最新的 `murmur.zip` 文件。
+2. 将压缩包内的内容解压到您库的 `.obsidian/plugins/murmur` 目录下（如果 `murmur` 文件夹不存在，请先创建它）。
+3. 确保 `main.js`、`manifest.json` 以及 `audio` 文件夹都直接位于 `murmur` 目录下。
+4. 重启 Obsidian 或在**社区插件**设置中点击“重新加载”，然后启用插件。
 
 ## 如何使用
 
