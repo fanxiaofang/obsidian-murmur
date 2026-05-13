@@ -94,6 +94,7 @@ export class MurmurView extends ItemView {
     this.reactRoot?.render(
       <StrictMode>
         <AppRoot
+          app={this.app}
           dataSource={createObsidianDataSource(this.app)}
           bgmManager={this.plugin.bgmManager}
           onOpenSettings={() => {

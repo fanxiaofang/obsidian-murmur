@@ -30,7 +30,7 @@ import {
   PanelLeftOpen,
   Lock
 } from 'lucide-react';
-import { Notice } from 'obsidian';
+import { Notice, type App } from 'obsidian';
 import { useBgm } from './audio/useBgm';
 import { BgmControl } from './audio/BgmControl';
 import type { BgmManager } from './audio/BgmManager';
@@ -110,6 +110,7 @@ const evaluateParadigm = (p: Paradigm, note: Note) => {
 };
 
 interface AppProps {
+  app: App;
   dataSource: MurmurDataSource;
   bgmManager?: BgmManager | null;
   onOpenSettings?: () => void;
@@ -680,7 +681,7 @@ const ParadigmEditor = ({ isOpen, onClose, onSave }: any) => {
   );
 };
 
-export default function App({ dataSource, bgmManager = null, onOpenSettings }: AppProps) {
+export default function App({ app, dataSource, bgmManager = null, onOpenSettings }: AppProps) {
   const [isCreatingParadigm, setIsCreatingParadigm] = useState(false);
 
   const [paradigms, setParadigms] = useState<Paradigm[]>([]);
@@ -861,19 +862,70 @@ export default function App({ dataSource, bgmManager = null, onOpenSettings }: A
   const commitRef = useRef(handleCommit);
   commitRef.current = handleCommit;
 
+  const [hotkeyText, setHotkeyText] = useState('NOT SET');
+
+  const updateHotkeyText = React.useCallback(() => {
+    // @ts-ignore
+    const commands = app.commands?.commands || {};
+    const commandId = Object.keys(commands).find(id => id.endsWith(':quick-submit')) || 'murmur:quick-submit';
+
+    // @ts-ignore
+    const hkMgr = app.hotkeyManager;
+    // @ts-ignore
+    const hk = app.hotkeys;
+    const cmd = commands[commandId];
+
+    // Try every known path for hotkey storage
+    const hotkeys =
+      hkMgr?.getHotkeys?.(commandId) ||
+      hkMgr?.customKeys?.[commandId] ||
+      hkMgr?.defaultKeys?.[commandId] ||
+      hk?.getHotkeys?.(commandId) ||
+      hk?.customKeys?.[commandId] ||
+      cmd?.hotkeys;
+
+    if (!hotkeys || hotkeys.length === 0) {
+      setHotkeyText('NOT SET');
+      return;
+    }
+
+    const hotkey = hotkeys[0];
+    const isMac = typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+    const modifiers = (hotkey.modifiers || []).map((m: string) => {
+      if (m === 'Mod') return isMac ? 'CMD' : 'CTRL';
+      if (m === 'Meta') return 'CMD';
+      return m.toUpperCase();
+    });
+
+    setHotkeyText([...modifiers, hotkey.key.toUpperCase()].join(' + '));
+  }, [app]);
+
   React.useEffect(() => {
-    const textarea = textareaRef.current;
-    if (!textarea) return;
-    const handler = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'Enter') {
-        e.preventDefault();
-        e.stopPropagation();
-        void commitRef.current();
-      }
+    updateHotkeyText();
+    // Refresh again after a short delay to ensure Obsidian commands are fully loaded
+    const timer = setTimeout(updateHotkeyText, 1000);
+    return () => clearTimeout(timer);
+  }, [updateHotkeyText]);
+
+  // Update hotkey text when the app gains focus or window gains focus
+  React.useEffect(() => {
+    if (isFocused) {
+      updateHotkeyText();
+    }
+    
+    window.addEventListener('focus', updateHotkeyText);
+    return () => window.removeEventListener('focus', updateHotkeyText);
+  }, [isFocused, updateHotkeyText]);
+
+  React.useEffect(() => {
+    const onQuickSubmit = () => {
+      void commitRef.current();
     };
-    textarea.addEventListener('keydown', handler, true);
-    return () => textarea.removeEventListener('keydown', handler, true);
-  }, []);
+    app.workspace.on('murmur:quick-submit' as any, onQuickSubmit);
+    return () => {
+      app.workspace.off('murmur:quick-submit' as any, onQuickSubmit);
+    };
+  }, [app]);
 
   const handleOpenNote = useCallback(async (note: Note) => {
     try {
@@ -1464,7 +1516,7 @@ export default function App({ dataSource, bgmManager = null, onOpenSettings }: A
                     ${isFocused ? 'opacity-40 translate-y-0' : 'opacity-0 translate-y-1'}
                   `}>
                         <span className="text-[11px] font-mono text-vintage-orange tracking-tighter">
-                          [ <span className="text-vintage-orange font-bold px-1 select-none">CTRL + SHIFT + ENTER</span> ] TO COMMIT
+                          [ <span className="text-vintage-orange font-bold px-1 select-none">{hotkeyText}</span> ] TO COMMIT
                         </span>
                       </div>
                     </div>

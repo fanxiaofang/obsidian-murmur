@@ -74,6 +74,14 @@ export default class MurmurPlugin extends Plugin {
         },
       });
 
+      this.addCommand({
+        id: 'quick-submit',
+        name: 'Quick Submit',
+        callback: () => {
+          this.app.workspace.trigger('murmur:quick-submit');
+        },
+      });
+
       this.addSettingTab(new MurmurSettingTab(this.app, this));
     } catch (e) {
       console.error('[Murmur] Failed to load plugin:', e);
