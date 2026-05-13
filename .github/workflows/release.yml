@@ -8,6 +8,8 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: write   # 允许创建 Release 和上传附件
     runs-on: ubuntu-latest
 
     steps:
