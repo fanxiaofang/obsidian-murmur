@@ -1,0 +1,39 @@
+name: Release Obsidian Plugin
+
+on:
+  push:
+    tags:
+      - "*" # 当推送任意形如 1.0.0, 0.1.1 的标签时触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x" # 使用 Node.js 20 版本
+
+      - name: Build Plugin
+        run: |
+          npm install
+          npm run build
+          # Create a zip file for manual installation, preserving the directory structure
+          (cd dist && zip -r ../murmur-plugin.zip .)
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/main.js
+            dist/manifest.json
+            dist/versions.json
+            murmur-plugin.zip
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
