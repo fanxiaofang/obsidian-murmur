@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - "*" # 当推送任意形如 1.0.0, 0.1.1 的标签时触发
+  workflow_dispatch: # 允许手动在 GitHub Actions 页面运行此工作流
 
 jobs:
   build:
