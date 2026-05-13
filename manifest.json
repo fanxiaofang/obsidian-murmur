@@ -1,0 +1,9 @@
+{
+  "id": "murmur",
+  "name": "Murmur",
+  "version": "0.1.0",
+  "minAppVersion": "1.12.7",
+  "description": "Retro-terminal inner monologue recorder. Turn murmurs into energy fragments.",
+  "author": "Yeelen",
+  "isDesktopOnly": false
+}
