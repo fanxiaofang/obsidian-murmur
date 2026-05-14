@@ -24,6 +24,7 @@
   --color-ink: var(--murmur-ink);
   --color-vintage-teal: #2DD4BF;
   --color-vintage-orange: #EAB308;
+  --color-amber-dim: #b8952e;
   --color-vintage-border: var(--murmur-border);
   --color-card: var(--murmur-card);
   --color-vintage-red: #5C2E27;
@@ -293,6 +294,10 @@
 
   textarea:focus {
     caret-shape: block !important;
+  }
+
+  .text-amber-dim-30 {
+    color: rgba(184, 149, 46, 0.3);
   }
 
   .scrollbar-hide::-webkit-scrollbar {

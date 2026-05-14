@@ -1,32 +1,24 @@
 // src/audio/BgmControl.tsx
 
 import React, { useEffect, useRef } from 'react';
-import { Waves, ChevronLeft, ChevronRight, Volume2, VolumeX } from 'lucide-react';
-import type { BgmTrackId } from './types';
-import { BGM_TRACKS } from './types';
+import { Volume2, VolumeX } from 'lucide-react';
 
 interface BgmControlProps {
   enabled: boolean;
-  trackId: BgmTrackId;
   volume: number;
-  trackLabel: string;
   onToggle: () => void;
   onSetVolume: (v: number) => void;
-  onSetTrack: (id: BgmTrackId) => void;
-  onPrevTrack: () => void;
-  onNextTrack: () => void;
   onClose: () => void;
 }
 
 export const BgmControl: React.FC<BgmControlProps> = ({
-  enabled, trackId, volume, trackLabel,
-  onToggle, onSetVolume, onSetTrack, onPrevTrack, onNextTrack, onClose,
+  enabled, volume,
+  onToggle, onSetVolume, onClose,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      // Use composedPath to handle clicks correctly inside Shadow DOM
       const path = e.composedPath();
       if (ref.current && !path.includes(ref.current)) {
         onClose();
@@ -39,46 +31,14 @@ export const BgmControl: React.FC<BgmControlProps> = ({
   return (
     <div
       ref={ref}
-      className="absolute bottom-full left-0 mb-2 w-56 bg-[#0c0c0c] border border-vintage-orange/20 
+      className="absolute bottom-full left-0 mb-2 w-48 bg-[#0c0c0c] border border-vintage-orange/20 
                  rounded-lg p-3 shadow-2xl z-[100]"
-      style={{ minWidth: '200px' }}
+      style={{ minWidth: '180px' }}
     >
-      {/* 曲目切换 */}
-      <div className="flex items-center justify-between mb-3">
-        <button
-          onClick={(e) => { e.stopPropagation(); onPrevTrack(); }}
-          className="text-vintage-orange/40 hover:text-vintage-orange transition-colors"
-        >
-          <ChevronLeft size={14} />
-        </button>
-        <span className="text-[11px] font-mono text-vintage-orange/70 tracking-[0.15em] uppercase">
-          {trackLabel}
-        </span>
-        <button
-          onClick={(e) => { e.stopPropagation(); onNextTrack(); }}
-          className="text-vintage-orange/40 hover:text-vintage-orange transition-colors"
-        >
-          <ChevronRight size={14} />
-        </button>
+      <div className="text-[11px] font-mono text-vintage-orange/70 tracking-[0.15em] uppercase mb-3 text-center">
+        夏日雨后
       </div>
 
-      {/* 曲目列表 */}
-      <div className="space-y-1 mb-3">
-        {BGM_TRACKS.map(t => (
-          <button
-            key={t.id}
-            onClick={(e) => { e.stopPropagation(); onSetTrack(t.id); }}
-            className={`w-full text-left px-2 py-1 rounded text-[11px] font-mono transition-colors
-              ${trackId === t.id
-                ? 'bg-vintage-orange/10 text-vintage-orange'
-                : 'text-stone-500 hover:text-stone-300 hover:bg-white/[0.03]'}`}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      {/* 音量控制 */}
       <div className="flex items-center gap-2">
         <style>{`
           .bgm-volume-slider::-webkit-slider-thumb {

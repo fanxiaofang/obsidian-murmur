@@ -1,4 +1,4 @@
-import {Plugin, Notice, addIcon, normalizePath} from 'obsidian';
+import {Plugin, Notice, addIcon} from 'obsidian';
 import {MurmurSettingTab} from './src/plugin/MurmurSettingTab';
 import {MurmurView, VIEW_TYPE_MURMUR} from './src/plugin/MurmurView';
 import {BgmManager} from './src/audio/BgmManager';
@@ -40,7 +40,6 @@ export default class MurmurPlugin extends Plugin {
       await this.loadSettings();
 
       this.bgmManager = new BgmManager(
-        (path) => this.app.vault.adapter.getResourcePath(normalizePath(`${this.manifest.dir}/${path}`)),
         this.settings.bgm,
         (msg) => new Notice(msg)
       );

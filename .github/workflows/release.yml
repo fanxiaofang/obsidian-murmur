@@ -23,8 +23,6 @@ jobs:
         run: |
           npm install
           npm run build
-          # Create a zip file named murmur.zip
-          (cd dist && zip -r ../murmur.zip .)
 
       - name: Create Release
         id: create_release
@@ -34,7 +32,7 @@ jobs:
             dist/main.js
             dist/manifest.json
             dist/versions.json
-            murmur.zip
+            dist/styles.css
           draft: false
           prerelease: false
           generate_release_notes: true

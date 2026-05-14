@@ -3,7 +3,7 @@ import {createRoot, type Root} from 'react-dom/client';
 import {ItemView, type WorkspaceLeaf} from 'obsidian';
 import AppRoot from '../App';
 import {createObsidianDataSource} from '../data/obsidian-data-source';
-import murmurStyles from '../index.css?inline';
+
 
 import type MurmurPlugin from '../../main';
 
@@ -11,8 +11,7 @@ export const VIEW_TYPE_MURMUR = 'murmur-view';
 
 export class MurmurView extends ItemView {
   private reactRoot: Root | null = null;
-  private previousPadding = '';
-  private previousOverflow = '';
+
   private plugin: MurmurPlugin;
 
   constructor(leaf: WorkspaceLeaf, plugin: MurmurPlugin) {

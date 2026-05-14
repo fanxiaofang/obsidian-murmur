@@ -14,7 +14,6 @@ A retro-terminal style inner monologue recorder for Obsidian. Amidst the silent 
 - **Daily Timeline**: Automatic extraction of content from your daily notes, organized by time.
 - **Activity Heatmap**: Visualize your writing consistency over the past months.
 - **Zen Background Music**: Integrated ambient sounds (Rain, Mountains & Rivers, Birds) to help you focus.
-  ![BGM Control](./images/bgm.png)
 - **Responsive Layout**: Seamlessly transitions between wide desktop views and compact mobile-friendly sidebars.
 - **Theme Aware**: Perfectly adapts to both Obsidian Light and Dark themes with custom vintage color palettes.
 
@@ -74,8 +73,7 @@ In the plugin settings, you can:
 - **复古终端美学**：受复古计算和赛博朋克控制台启发而设计的独特风格。
 - **每日时间轴**：自动从您的每日记录中提取内容，按时间排序。
 - **活动热力图**：可视化您过去几个月的写作频率。
-- **背景音乐**：集成环境音（雨声、山河、鸟鸣）帮助您集中注意力。
-  ![BGM 控制](./images/bgm.png)
+- **背景音乐**：集成环境音（雨声）帮助您集中注意力。
 - **响应式布局**：在宽屏桌面视图和适配移动端的侧边栏视图之间无缝切换。
 - **主题适配**：完美适配 Obsidian 的深色和浅色主题，配有自定义复古调色盘。
 
@@ -101,10 +99,9 @@ Murmur 使用了一套独特的术语来描述其功能组件：
 4. 点击 **安装**，然后 **启用**。
 
 ### 手动安装
-1. 从 [GitHub Releases](https://github.com/fanxiaofang/obsidian-murmur/releases) 下载最新的 `murmur.zip` 文件。
-2. 将压缩包内的内容解压到您库的 `.obsidian/plugins/murmur` 目录下（如果 `murmur` 文件夹不存在，请先创建它）。
-3. 确保 `main.js`、`manifest.json` 以及 `audio` 文件夹都直接位于 `murmur` 目录下。
-4. 重启 Obsidian 或在**社区插件**设置中点击“重新加载”，然后启用插件。
+1. 从 [GitHub Releases](https://github.com/fanxiaofang/obsidian-murmur/releases) 下载最新的 `main.js`、`manifest.json` 以及 `styles.css` 。
+2. 将文件移动到 `.obsidian/plugins/murmur` 目录下。
+3. 重启 Obsidian 或在**社区插件**设置中点击“重新加载”，然后启用插件。
 
 ## 如何使用
 

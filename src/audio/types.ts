@@ -1,4 +1,4 @@
-export type BgmTrackId = 'bird' | 'goWest' | 'rain';
+export type BgmTrackId = 'nature';
 
 export interface BgmTrack {
   id: BgmTrackId;
@@ -18,19 +18,11 @@ export interface BgmState {
 }
 
 export const BGM_TRACKS: BgmTrack[] = [
-  { id: 'bird', label: '鸟鸣' },
-  { id: 'goWest', label: '山河' },
-  { id: 'rain', label: '雨声' },
+  { id: 'nature', label: '夏日雨后' },
 ];
-
-export const BGM_FILENAME_MAP: Record<BgmTrackId, string> = {
-  bird: 'bird_min.mp3',
-  goWest: 'goWest_min.mp3',
-  rain: 'rain_min.mp3',
-};
 
 export const DEFAULT_BGM_SETTINGS: BgmSettings = {
   enabled: false,
-  defaultTrack: 'rain',
+  defaultTrack: 'nature',
   defaultVolume: 0.3,
 };

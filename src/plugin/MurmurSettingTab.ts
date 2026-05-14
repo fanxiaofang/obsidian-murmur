@@ -1,4 +1,4 @@
-import { PluginSettingTab, Setting, Notice, type App, type Plugin } from 'obsidian';
+import { PluginSettingTab, Setting, Notice, type App } from 'obsidian';
 import type MurmurPlugin from '../../main';
 
 export class MurmurSettingTab extends PluginSettingTab {
@@ -37,9 +37,9 @@ export class MurmurSettingTab extends PluginSettingTab {
         cls: 'murmur-setting-warning',
       });
 
-      const icon = warningBox.createSpan({ text: '⚠️', cls: 'murmur-setting-warning-icon' });
+      warningBox.createSpan({ text: '⚠️', cls: 'murmur-setting-warning-icon' });
 
-      const title = warningBox.createEl('strong', {
+      warningBox.createEl('strong', {
         text: '检测到您尚未设置日记存放目录',
         cls: 'murmur-setting-warning-title'
       });
@@ -87,31 +87,12 @@ export class MurmurSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('背景音开关')
-      .setDesc('开启后，可以通过输入框底栏电流图标控制背景音')
+      .setDesc('开启后，可以通过输入框底栏信号流图标控制夏日雨后环境音')
       .addToggle((toggle) => {
         toggle.setValue(this.plugin.settings.bgm.enabled).onChange(async (value) => {
           this.plugin.settings.bgm.enabled = value;
           await this.plugin.saveSettings();
         });
-      });
-
-    const BGM_TRACK_OPTIONS = [
-      { id: 'bird', label: '鸟鸣' },
-      { id: 'goWest', label: '山河' },
-      { id: 'rain', label: '雨声' },
-    ];
-
-    new Setting(containerEl)
-      .setName('默认曲目')
-      .setDesc('选择默认播放的背景音类型')
-      .addDropdown((dropdown) => {
-        BGM_TRACK_OPTIONS.forEach((t) => dropdown.addOption(t.id, t.label));
-        dropdown
-          .setValue(this.plugin.settings.bgm.defaultTrack)
-          .onChange(async (value) => {
-            this.plugin.settings.bgm.defaultTrack = value as any;
-            await this.plugin.saveSettings();
-          });
       });
 
     new Setting(containerEl)

@@ -1,17 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  BarChart3,
   Calendar,
   Hash,
-  History,
-  LayoutGrid,
   Waves,
   MoreHorizontal,
   MoreVertical,
   Plus,
   Search,
   Settings,
-  Tag,
   Compass,
   X,
   Pencil,
@@ -22,20 +18,12 @@ import {
   Telescope,
   Gauge,
   Activity,
-  Type,
-  CalendarDays,
-  FileText,
-  Check,
-  PanelLeftClose,
-  PanelLeftOpen,
   Lock
 } from 'lucide-react';
 import { Notice, Platform, type App as ObsidianApp } from 'obsidian';
 import { useBgm } from './audio/useBgm';
 import { BgmControl } from './audio/BgmControl';
 import type { BgmManager } from './audio/BgmManager';
-import type { BgmTrackId } from './audio/types';
-import { BGM_TRACKS } from './audio/types';
 import { motion, AnimatePresence } from 'motion/react';
 import { useMurmurData } from './data/use-murmur-data';
 import type { MurmurDataSource, Note } from './domain/types';
@@ -188,7 +176,7 @@ function buildHeatmapCells(notes: Note[]): HeatmapCell[] {
   });
 }
 
-function getHeatmapCellClasses(count: number, maxCount: number) {
+function getHeatmapCellClasses(count: number) {
   // Lv.0 (无)
   let cellStyle = 'bg-[#1a110a]/60 border-white/5 transition-all duration-1000';
   let glowStyle = '';
@@ -1003,10 +991,6 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
     { label: '盛辰', value: formatPeakDay(stats.peakDay), unit: '', isDate: true },
   ];
   const heatmapCells = useMemo(() => buildHeatmapCells(notes), [notes]);
-  const maxHeatmapCount = useMemo(
-    () => heatmapCells.reduce((max, cell) => Math.max(max, cell.count), 0),
-    [heatmapCells],
-  );
   const consoleStatusText = error
     ? 'Folder_Not_Set'
     : isSubmitting
@@ -1083,7 +1067,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                 {/* Always show Settings */}
                 <button
                   onClick={onOpenSettings}
-                  className="text-stone-500/40 hover:text-vintage-orange/60 transition-all p-2 hover:bg-white/[0.02] rounded-lg border border-transparent relative group/settings"
+                  className="text-amber-dim-30 hover:text-vintage-orange/60 transition-all p-2 hover:bg-white/[0.02] rounded-lg border border-transparent relative group/settings"
                 >
                   <Settings size={16} strokeWidth={1.5} />
 
@@ -1096,7 +1080,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                 {isNarrow && (
                   <button
                     onClick={() => setIsSidebarOpen(false)}
-                    className="text-stone-500/40 hover:text-vintage-orange transition-all p-2 group/retract relative"
+                    className="text-amber-dim-30 hover:text-vintage-orange transition-all p-2 group/retract relative"
                   >
                     <div className="flex items-center">
                       <ChevronLeft size={16} strokeWidth={3} className="group-hover/retract:-translate-x-0.5 transition-transform" />
@@ -1167,7 +1151,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                       style={{ gridTemplateColumns: 'repeat(12, 1fr)' }}
                     >
                       {heatmapCells.map((cell, index) => {
-                        const { cellStyle, glowStyle } = getHeatmapCellClasses(cell.count, maxHeatmapCount);
+                        const { cellStyle, glowStyle } = getHeatmapCellClasses(cell.count);
                         const isNarrow = heatmapWidth > 0 && heatmapWidth < 180;
                         const colIndex = Math.floor(index / 7);
                         // Last 2 cols scale from right edge to stay in viewport
@@ -1426,7 +1410,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                               e.stopPropagation();
                               setIsSidebarOpen(true);
                             }}
-                            className="mr-1.5 text-stone-500/60 hover:text-vintage-orange transition-all flex items-center group/toggle relative"
+                            className="mr-1.5 text-vintage-orange/30 hover:text-vintage-orange transition-all flex items-center group/toggle relative"
                           >
                             <div className="flex items-center">
                               <div className="w-[1.2px] h-2.5 bg-current opacity-20 mr-0.5 rounded-full group-hover/toggle:opacity-60 transition-opacity" />
@@ -1453,7 +1437,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                                 e.stopPropagation();
                                 setActiveParadigmId(null);
                               }}
-                              className="relative p-px text-vintage-teal/50 hover:text-vintage-orange hover:bg-vintage-orange/15 rounded-full transition-all flex-shrink-0 group/clear"
+                              className="relative !bg-transparent !border-none !shadow-none p-0 text-vintage-teal/50 hover:text-vintage-orange transition-all flex-shrink-0 group/clear"
                             >
                               <X size={11} />
                               <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-[#0c0c0c] border border-vintage-orange/40 border-solid text-[10px] font-sans text-vintage-orange/70 rounded-sm opacity-0 group-hover/clear:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/clear:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.15em]">
@@ -1526,9 +1510,9 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                         {/* Hash / Tag Button */}
                         <button
                           onClick={handleAddHash}
-                          className="hover:text-vintage-teal transition-all hover:scale-110 active:scale-95 group/btn relative h-full flex items-center"
+                          className="transition-all hover:scale-110 active:scale-95 group/btn relative h-full flex items-center"
                         >
-                          <Hash size={14} />
+                          <Hash size={14} className="text-vintage-orange/30 group-hover/btn:text-vintage-teal transition-colors duration-300" />
                           <div className="absolute bottom-full left-0 mb-3 px-1.5 py-0.5 bg-[#080808] border border-vintage-orange/40 text-[9px] font-sans text-vintage-orange/80 rounded-sm opacity-0 group-hover/btn:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/btn:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.2em] border-solid">
                             插入标签
                           </div>
@@ -1540,26 +1524,24 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                             onClick={() => {
                               if (bgmManager) setBgmMenuOpen(v => !v);
                             }}
-                            className={`hover:text-vintage-teal transition-all hover:scale-110 active:scale-90 h-full flex items-center group/wav relative ${bgm.enabled ? 'text-vintage-orange' : 'text-vintage-orange/30'}`}
+                            className="hover:text-vintage-teal transition-all hover:scale-110 active:scale-90 h-full flex items-center group/wav relative"
                           >
-                            <Waves size={14} className={bgm.enabled ? 'animate-pulse' : ''} />
+                            <Waves 
+                              size={14} 
+                              className={`transition-all duration-300 group-hover/wav:text-vintage-teal ${bgm.enabled ? 'text-vintage-teal animate-pulse [filter:drop-shadow(0_0_3px_rgba(45,212,191,0.5))]' : 'text-vintage-orange/30'}`} 
+                            />
                             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-1.5 py-0.5 bg-[#080808] border border-vintage-orange/40 text-[9px] font-sans text-vintage-orange/80 rounded-sm opacity-0 group-hover/wav:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/wav:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.2em] border-solid">
-                              {bgm.enabled ? BGM_TRACKS.find(t => t.id === bgm.trackId)?.label ?? '背景音' : '背景音'}
+                              夏日雨后
                             </div>
                           </button>
                           {bgmMenuOpen && (
                             <BgmControl
                               enabled={bgm.enabled}
-                              trackId={bgm.trackId}
                               volume={bgm.volume}
-                              trackLabel={BGM_TRACKS.find(t => t.id === bgm.trackId)?.label ?? ''}
                               onToggle={() => {
                                 bgm.toggle();
                               }}
                               onSetVolume={(v) => bgm.setVolume(v)}
-                              onSetTrack={(id: BgmTrackId) => bgm.setTrack(id)}
-                              onPrevTrack={() => bgm.prevTrack()}
-                              onNextTrack={() => bgm.nextTrack()}
                               onClose={() => setBgmMenuOpen(false)}
                             />
                           )}
@@ -1582,7 +1564,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                             className={`
                           px-4 py-1 rounded-sm border font-mono font-bold text-[10px] tracking-widest transition-all uppercase flex items-center gap-2 h-[26px]
                           ${inputText.trim() && !isSubmitting
-                                ? 'bg-vintage-orange/10 border-vintage-orange/50 text-vintage-orange shadow-[0_0_6px_rgba(245,158,11,0.2)] hover:bg-vintage-orange hover:text-black active:scale-95 cursor-pointer'
+                                ? 'bg-transparent border-vintage-orange/30 text-vintage-orange/30 hover:bg-vintage-orange hover:text-black hover:border-vintage-orange hover:shadow-[0_0_8px_rgba(245,158,11,0.4)] active:scale-95 cursor-pointer'
                                 : 'bg-transparent border-white/5 text-white/10 cursor-default'
                               }
                         `}

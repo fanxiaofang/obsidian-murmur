@@ -63,7 +63,7 @@ async function ensureFolderExists(app: App, filePath: string) {
   }
 }
 
-async function getTemplateContent(app: App, targetFile?: TFile) {
+async function getTemplateContent(app: App) {
   const settings = getDailyNotesSettings(app);
   if (!settings.template) {
     return '';
@@ -87,7 +87,7 @@ async function ensureTodayJournalFile(app: App) {
   await ensureFolderExists(app, journalPath);
 
   const createdFile = await app.vault.create(journalPath, '');
-  const initialContent = await getTemplateContent(app, createdFile);
+  const initialContent = await getTemplateContent(app);
 
   if (initialContent.trim()) {
     await app.vault.modify(createdFile, `${initialContent.trimEnd()}\n`);
@@ -96,51 +96,7 @@ async function ensureTodayJournalFile(app: App) {
   return createdFile;
 }
 
-async function readJournalNotes(app: App) {
-  const settings = getDailyNotesSettings(app);
-  const folder = normalizePath(settings.folder || '');
-  
-  // Try to find all Markdown files in the vault that match the daily note folder
-  const files = app.vault.getMarkdownFiles().filter((file) => {
-    // If folder is specified, file must be in that folder or its subfolders
-    if (folder && !file.path.startsWith(`${folder}/`)) {
-      return false;
-    }
-    
-    // Additional check: daily notes usually follow a specific date format
-    // If the file basename doesn't match a common date pattern, we might want to skip it,
-    // but for now let's be inclusive and just filter by folder.
-    return true;
-  });
 
-  const noteGroups = await Promise.all(
-    files.map(async (file) => {
-      const markdown = await app.vault.cachedRead(file);
-      const entries = parseJournalEntriesFromMarkdown({
-        path: file.path,
-        markdown,
-        ctime: file.stat.ctime,
-        mtime: file.stat.mtime,
-      });
-      
-      return entries;
-    }),
-  );
-
-  return noteGroups
-    .flat()
-    .sort((a, b) => {
-      if (a.date !== b.date) {
-        return b.date.localeCompare(a.date);
-      }
-
-      if (a.time !== b.time) {
-        return b.time.localeCompare(a.time);
-      }
-
-      return b.mtime - a.mtime;
-    });
-}
 
 export function createObsidianDataSource(app: App): MurmurDataSource {
   const fileCache = new Map<string, { mtime: number; notes: Note[] }>();
