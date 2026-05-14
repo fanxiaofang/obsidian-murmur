@@ -17,7 +17,7 @@ export class MurmurSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl('h2', { text: 'Murmur · Global View Console' });
+    new Setting(containerEl).setName('Murmur · Global View Console').setHeading();
     containerEl.createEl('p', {
       text: '为Obsidian 设计的复古终端式内心独白记录，在无声转动的机械齿轮中，把呢喃低语化为能量碎片',
       cls: 'setting-item-description',
@@ -30,36 +30,31 @@ export class MurmurSettingTab extends PluginSettingTab {
     const dailyNotesFolder = String(dnSettings.folder ?? '').trim();
     const isFolderMissing = isDailyNotesEnabled && !dailyNotesFolder;
 
-    containerEl.createEl('h3', { text: '依赖插件状态 (Dependencies)' });
+    new Setting(containerEl).setName('依赖插件状态 (Dependencies)').setHeading();
 
     if (isFolderMissing) {
       const warningBox = containerEl.createDiv({
         cls: 'murmur-setting-warning',
       });
-      warningBox.style.cssText =
-        'background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:16px;margin-bottom:16px;';
 
-      const icon = warningBox.createSpan({ text: '⚠️' });
-      icon.style.marginRight = '8px';
+      const icon = warningBox.createSpan({ text: '⚠️', cls: 'murmur-setting-warning-icon' });
 
       const title = warningBox.createEl('strong', {
         text: '检测到您尚未设置日记存放目录',
+        cls: 'murmur-setting-warning-title'
       });
-      title.style.color = 'var(--text-warning, #eab308)';
 
       warningBox.createEl('p', {
         text: 'Murmur 依赖日记核心插件来存储灵感碎片。当前日记存放目录为空，Murmur 将以只读模式运行，无法写入新条目。',
-        cls: 'setting-item-description',
-      }).style.marginTop = '8px';
+        cls: 'setting-item-description murmur-setting-warning-desc',
+      });
 
-      const btnRow = warningBox.createDiv();
-      btnRow.style.marginTop = '12px';
+      const btnRow = warningBox.createDiv({ cls: 'murmur-setting-warning-btn-row' });
 
       const openSettingsBtn = btnRow.createEl('button', {
         text: '前往日记插件设置',
+        cls: 'murmur-setting-warning-btn'
       });
-      openSettingsBtn.style.cssText =
-        'background:rgba(245,158,11,0.2);color:#eab308;border:1px solid rgba(245,158,11,0.4);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;';
       openSettingsBtn.addEventListener('click', () => {
         (this.app as any).setting?.openTabById?.('daily-notes');
       });
@@ -72,7 +67,7 @@ export class MurmurSettingTab extends PluginSettingTab {
         toggle.setValue(isDailyNotesEnabled).setDisabled(true);
       });
 
-    containerEl.createEl('h3', { text: '视觉与校准 (Visuals)' });
+    new Setting(containerEl).setName('视觉与校准 (Visuals)').setHeading();
 
     new Setting(containerEl)
       .setName('机械动画')
@@ -88,7 +83,7 @@ export class MurmurSettingTab extends PluginSettingTab {
       });
 
 
-    containerEl.createEl('h3', { text: '背景音 (Ambient Sound)' });
+    new Setting(containerEl).setName('背景音 (Ambient Sound)').setHeading();
 
     new Setting(containerEl)
       .setName('背景音开关')
@@ -131,12 +126,12 @@ export class MurmurSettingTab extends PluginSettingTab {
             this.plugin.settings.bgm.defaultVolume = value / 100;
             await this.plugin.saveSettings();
             (this.containerEl.querySelector('.setting-item-description:last-of-type') as HTMLElement)
-              ?.setTextContent?.(`当前: ${value}%`);
+              ?.setText(`当前: ${value}%`);
           });
       });
 
 
-    containerEl.createEl('h3', { text: '系统状态诊断' });
+    new Setting(containerEl).setName('系统状态诊断').setHeading();
 
     new Setting(containerEl)
       .setName('强制刷新数据')

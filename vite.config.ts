@@ -29,6 +29,10 @@ export default defineConfig({
       external: ['obsidian'],
       output: {
         exports: 'named',
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name?.endsWith('.css')) return 'styles.css';
+          return assetInfo.name || '';
+        },
       },
     },
   },

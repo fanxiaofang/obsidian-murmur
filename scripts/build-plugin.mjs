@@ -1,7 +1,7 @@
-import {copyFileSync, mkdirSync, existsSync, cpSync, rmSync} from 'node:fs';
+import { copyFileSync, mkdirSync, existsSync, cpSync, rmSync } from 'node:fs';
 import path from 'node:path';
-import {build} from 'vite';
-import 'dotenv/config';
+import { build } from 'vite';
+
 
 const rootDir = process.cwd();
 const distDir = path.join(rootDir, 'dist');
@@ -21,10 +21,17 @@ async function runBuild() {
 
   // Helper to copy build artifacts to Obsidian
   const copyToObsidian = () => {
+    const distCss = path.join(distDir, 'styles.css');
+
+    // 2. Copy to local Obsidian vault if path is set
     if (existsSync(obsidianPluginDir)) {
       try {
         copyFileSync(path.join(distDir, 'main.js'), path.join(obsidianPluginDir, 'main.js'));
         copyFileSync(path.join(distDir, 'manifest.json'), path.join(obsidianPluginDir, 'manifest.json'));
+        
+        if (existsSync(distCss)) {
+          copyFileSync(distCss, path.join(obsidianPluginDir, 'styles.css'));
+        }
 
         const distAudioDir = path.join(distDir, 'audio');
         const obsAudioDir = path.join(obsidianPluginDir, 'audio');
@@ -41,17 +48,16 @@ async function runBuild() {
   };
 
   // initial copy
-  mkdirSync(distDir, {recursive: true});
+  mkdirSync(distDir, { recursive: true });
   if (existsSync(path.join(rootDir, 'manifest.json'))) {
     copyFileSync(path.join(rootDir, 'manifest.json'), path.join(distDir, 'manifest.json'));
   }
   if (existsSync(path.join(rootDir, 'versions.json'))) {
     copyFileSync(path.join(rootDir, 'versions.json'), path.join(distDir, 'versions.json'));
   }
-  
-  if (!isWatch) {
-    copyToObsidian();
-  }
+
+  // Always run artifact preparation (including renaming css)
+  copyToObsidian();
 }
 
 runBuild().catch(err => {

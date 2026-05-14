@@ -35,28 +35,10 @@ export class MurmurView extends ItemView {
   private mountEl: HTMLDivElement | null = null;
 
   async onOpen() {
-    this.previousPadding = this.contentEl.style.padding;
-    this.previousOverflow = this.contentEl.style.overflow;
     this.contentEl.empty();
-    this.contentEl.addClass('murmur-plugin-view');
-    this.contentEl.style.padding = '0';
-    this.contentEl.style.overflow = 'hidden';
+    this.contentEl.addClass('murmur-plugin-view-container');
 
-    const shadowHost = this.contentEl.createDiv({cls: 'murmur-shadow-host'});
-    shadowHost.style.display = 'block';
-    shadowHost.style.width = '100%';
-    shadowHost.style.height = '100%';
-    const shadowRoot = shadowHost.attachShadow({mode: 'open'});
-
-    const styleEl = document.createElement('style');
-    styleEl.textContent = murmurStyles;
-    shadowRoot.appendChild(styleEl);
-
-    this.mountEl = document.createElement('div');
-    this.mountEl.className = 'murmur-view';
-    this.mountEl.style.width = '100%';
-    this.mountEl.style.height = '100%';
-    shadowRoot.appendChild(this.mountEl);
+    this.mountEl = this.contentEl.createDiv({cls: 'murmur-view'});
 
     // Initial theme sync
     this.updateTheme();
@@ -118,7 +100,5 @@ export class MurmurView extends ItemView {
     this.reactRoot?.unmount();
     this.reactRoot = null;
     this.contentEl.empty();
-    this.contentEl.style.padding = this.previousPadding;
-    this.contentEl.style.overflow = this.previousOverflow;
   }
 }

@@ -1,23 +1,9 @@
-/* eslint-disable */
-// @ts-nocheck
-// Mobile compatibility polyfill: defining process.env safely
-if (typeof process === 'undefined') {
-  Object.defineProperty(window, 'process', {
-    value: { env: { NODE_ENV: 'production' } },
-    writable: false,
-    configurable: true,
-    enumerable: false
-  });
-}
-if (typeof global === 'undefined') {
-  window.global = window;
-}
-
 import {Plugin, Notice, addIcon, normalizePath} from 'obsidian';
 import {MurmurSettingTab} from './src/plugin/MurmurSettingTab';
 import {MurmurView, VIEW_TYPE_MURMUR} from './src/plugin/MurmurView';
 import {BgmManager} from './src/audio/BgmManager';
 import {DEFAULT_BGM_SETTINGS, type BgmSettings} from './src/audio/types';
+import './src/index.css';
 
 interface MurmurSettings {
   enableAnimations: boolean;

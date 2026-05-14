@@ -30,7 +30,7 @@ import {
   PanelLeftOpen,
   Lock
 } from 'lucide-react';
-import { Notice, type App } from 'obsidian';
+import { Notice, Platform, type App as ObsidianApp } from 'obsidian';
 import { useBgm } from './audio/useBgm';
 import { BgmControl } from './audio/BgmControl';
 import type { BgmManager } from './audio/BgmManager';
@@ -110,7 +110,7 @@ const evaluateParadigm = (p: Paradigm, note: Note) => {
 };
 
 interface AppProps {
-  app: App;
+  app: ObsidianApp;
   dataSource: MurmurDataSource;
   bgmManager?: BgmManager | null;
   onOpenSettings?: () => void;
@@ -610,7 +610,7 @@ const ParadigmEditor = ({ isOpen, onClose, onSave }: any) => {
                           value={c.type}
                           onChange={(e) => {
                             const newType = e.target.value;
-                            const defaultActions: Record<string, string> = { tag: 'include', type: 'is', text: 'include', date: 'is' };
+                            const defaultActions: Record<string, FilterAction> = { tag: 'include', type: 'is', text: 'include', date: 'is' };
                             updateCondition(c.id, { type: newType as any, action: defaultActions[newType] || 'include' });
                           }}
                           className="bg-black/40 text-[11px] text-vintage-orange/60 font-mono focus:outline-none cursor-pointer border border-white/5 rounded px-2 py-1"
@@ -845,7 +845,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
       setInputText('');
       setEditingNote(null);
       if (textareaRef.current) {
-        textareaRef.current.style.height = 'auto';
+        textareaRef.current.setCssProps({ '--textarea-height': 'auto' });
       }
       await refresh();
       // Auto-scroll to top after commitment to see the new entry
@@ -890,7 +890,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
     }
 
     const hotkey = hotkeys[0];
-    const isMac = typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+    const isMac = Platform.isMacOS;
     const modifiers = (hotkey.modifiers || []).map((m: string) => {
       if (m === 'Mod') return isMac ? 'CMD' : 'CTRL';
       if (m === 'Meta') return 'CMD';
@@ -943,8 +943,8 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
     queueMicrotask(() => {
       if (textareaRef.current) {
         textareaRef.current.focus();
-        textareaRef.current.style.height = 'auto';
-        textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+        textareaRef.current.setCssProps({ '--textarea-height': 'auto' });
+        textareaRef.current.setCssProps({ '--textarea-height': `${textareaRef.current.scrollHeight}px` });
       }
     });
   }, [setEditingNote, setInputText, setIsFocused, textareaRef]);
@@ -956,7 +956,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
         setEditingNote(null);
         setInputText('');
         if (textareaRef.current) {
-          textareaRef.current.style.height = 'auto';
+          textareaRef.current.setCssProps({ '--textarea-height': 'auto' });
         }
       }
       await refresh();
@@ -972,7 +972,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
     setEditingNote(null);
     setInputText('');
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
+      textareaRef.current.setCssProps({ '--textarea-height': 'auto' });
     }
   }, []);
 
@@ -1039,7 +1039,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
   };
 
   return (
-    <div ref={appContainerRef} className="relative h-screen flex murmur-view overflow-hidden">
+    <div ref={appContainerRef} className="relative h-full flex murmur-app-root overflow-hidden">
       <div className="paper-grain" />
 
       <aside
@@ -1047,7 +1047,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
           flex flex-col p-8 z-[100] transition-[width,opacity] duration-300 overflow-y-auto
           ${isNarrow
             ? `fixed inset-y-0 left-0 w-72 bg-[var(--murmur-sidebar)] shadow-2xl h-full ${isSidebarOpen ? 'block' : 'hidden'}`
-            : `${isSidebarOpen ? 'relative w-72 border-r border-vintage-border' : 'w-0 overflow-hidden opacity-0 p-0 border-none'} flex-shrink-0 sticky top-0 h-screen bg-[var(--murmur-sidebar)] block`}
+            : `${isSidebarOpen ? 'relative w-72 border-r border-vintage-border' : 'w-0 overflow-hidden opacity-0 p-0 border-none'} flex-shrink-0 sticky top-0 h-full bg-[var(--murmur-sidebar)] block`}
         `}
       >
         <div className="flex flex-col space-y-8 pb-24">
@@ -1216,7 +1216,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
               </div>
               <button
                 onClick={() => canAddParadigm ? setIsCreatingParadigm(true) : null}
-                className={`p-1 hover:bg-vintage-teal/10 rounded-full transition-all opacity-0 group-hover/header:opacity-100 relative group/new-p ${!canAddParadigm ? 'cursor-not-allowed opacity-30' : ''}`}
+                className={`p-1 hover:bg-vintage-teal/10 rounded-sm transition-all opacity-0 group-hover/header:opacity-100 relative group/new-p ${!canAddParadigm ? 'cursor-not-allowed opacity-30' : ''}`}
                 style={{ color: MURMUR_COLORS.teal }}
               >
                 <Plus size={14} />
@@ -1396,7 +1396,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
         <div className={`w-full max-w-[800px] ${isNarrow ? 'px-6' : 'px-12'} flex flex-col min-h-full mx-auto relative`}>
           {/* Fixed Header Container (Input + Birds) */}
           <div
-            className={`${isMobile ? 'relative' : 'sticky'} z-50 bg-paper/95 ${isMobile ? 'pt-[44px]' : isNarrow ? 'pt-2' : 'pt-8'} pb-4 border-b border-vintage-border transition-all duration-300`}
+            className={`${isMobile ? 'relative' : 'sticky'} z-50 bg-paper/95 ${isMobile ? 'pt-[44px]' : isNarrow ? 'pt-2' : 'pt-8'} pb-4 border-none transition-all duration-300`}
             style={isMobile ? undefined : { top: 0 }}
           >
             {/* Editor Area */}
@@ -1426,11 +1426,11 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                               e.stopPropagation();
                               setIsSidebarOpen(true);
                             }}
-                            className="mr-2 text-stone-500/60 hover:text-vintage-orange transition-all flex items-center group/toggle relative"
+                            className="mr-1.5 text-stone-500/60 hover:text-vintage-orange transition-all flex items-center group/toggle relative"
                           >
                             <div className="flex items-center">
-                              <div className="w-[1.5px] h-3 bg-current opacity-20 mr-1 rounded-full group-hover/toggle:opacity-60 transition-opacity" />
-                              <ChevronRight size={14} strokeWidth={3} className="group-hover/toggle:translate-x-0.5 transition-transform" />
+                              <div className="w-[1.2px] h-2.5 bg-current opacity-20 mr-0.5 rounded-full group-hover/toggle:opacity-60 transition-opacity" />
+                              <ChevronRight size={12} strokeWidth={3} className="group-hover/toggle:translate-x-0.5 transition-transform" />
                             </div>
                             <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-[#0c0c0c] border border-vintage-orange/40 border-solid text-[10px] font-sans text-vintage-orange/70 rounded-sm opacity-0 group-hover/toggle:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/toggle:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.15em]">
                               召唤侧栏
@@ -1476,8 +1476,8 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
 
                     <div className="relative overflow-hidden">
                       <textarea
-                        className={`w-full p-4 pb-10 bg-transparent resize-none border-none focus:ring-0 focus:outline-none text-base font-mono text-stone-300/90 placeholder:text-vintage-orange/20 leading-relaxed min-h-[100px] max-h-[40vh] relative z-10 tracking-widest ${isMobile ? '' : 'overflow-y-auto'} scrollbar-hide`}
-                        style={{ height: 'auto' }}
+                        className={`w-full px-5 py-4 pb-10 bg-transparent resize-none border-none focus:ring-0 focus:outline-none text-base font-mono text-stone-300/90 placeholder:text-vintage-orange/20 leading-relaxed min-h-[100px] max-h-[40vh] relative z-10 tracking-widest transition-all duration-500 ${isMobile ? '' : 'overflow-y-auto'} scrollbar-hide`}
+                        style={{ height: 'var(--textarea-height, auto)' }}
                         placeholder={isFocused ? "" : editingNote ? "editing_buffer_..." : error ? "folder_unset_..." : "此刻，你在想什么..."}
                         onFocus={() => setIsFocused(true)}
                         onBlur={() => setIsFocused(false)}
@@ -1504,8 +1504,8 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
 
                           setInputText(processedValue);
                           if (textareaRef.current) {
-                            textareaRef.current.style.height = 'auto';
-                            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+                            textareaRef.current.setCssProps({ '--textarea-height': 'auto' });
+                            textareaRef.current.setCssProps({ '--textarea-height': `${textareaRef.current.scrollHeight}px` });
                           }
                         }}
                       />
@@ -1618,9 +1618,9 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                   </div>
                 </div>
                 {/* Text Starts at 48px to match 3.4.C Specification */}
-                <div className="border-l-2 border-vintage-orange/30 pl-[25px] py-1 flex items-center">
+                <div className="pl-[25px] py-1 flex items-center border-none">
                   <div className="flex items-center gap-2 mt-0">
-                    <div className="px-2 py-0.5 border-l border-l-vintage-orange/40 flex items-center gap-2">
+                    <div className="px-2 py-0.5 flex items-center gap-2 border-none">
                       <div className={`status-blinker ${isLoading ? 'opacity-100' : 'opacity-70'} ${error ? 'bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.8)]' : ''}`} />
                       <p className="text-[11px] uppercase tracking-[0.4em] text-vintage-orange/30 font-mono font-bold">{timelineStatusText}</p>
                     </div>
@@ -1726,21 +1726,6 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
 
                           {/* Right-side instrument stack: indicators + navigation + menu */}
                           <div className="absolute right-2 top-2 flex flex-col items-center gap-1 z-20">
-                            {/* Jump to source button */}
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                void handleOpenNote(note);
-                              }}
-                              className="p-1 rounded-md hover:bg-white/5 text-vintage-teal/30 hover:text-vintage-teal transition-all active:scale-90 relative group/nav animate-pulse [animation-duration:4s]"
-                            >
-                              <Compass size={14} strokeWidth={1.5} />
-                              {/* Tooltip */}
-                              <div className="absolute top-1/2 right-full -translate-y-1/2 mr-2 px-1.5 py-0.5 bg-[#080808] border border-vintage-teal/40 border-solid text-[9px] font-sans text-vintage-teal/70 rounded-sm opacity-0 group-hover/nav:opacity-100 pointer-events-none transition-all duration-200 translate-x-1 group-hover/nav:translate-x-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.15em]">
-                                JUMP_TO_SOURCE
-                              </div>
-                            </button>
-
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -1795,7 +1780,6 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                                       <span>清档</span>
                                     </button>
 
-                                    <div className="h-px bg-gradient-to-r from-transparent via-white/5 to-transparent mx-2 my-0.5" />
 
                                     <button
                                       onClick={(e) => {
@@ -1878,24 +1862,25 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
           <div className="w-full max-w-[800px] relative px-12 flex justify-center">
             <AnimatePresence>
               {showScrollTop && (
-                <motion.button
+                <motion.div
                   initial={{ opacity: 0, y: 20, scale: 0.8 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 20, scale: 0.8 }}
                   onClick={scrollToTop}
-                  className="pointer-events-auto flex flex-col items-center group"
+                  role="button"
+                  className="pointer-events-auto flex flex-col items-center group cursor-pointer"
                 >
-                  <div className="relative p-3 bg-[#0c0c0c] border border-vintage-orange/20 rounded-full shadow-[0_5px_15px_rgba(0,0,0,0.8)] border-b-2 border-r-2 transition-all group-hover:border-vintage-orange/50 group-hover:shadow-[0_0_10px_rgba(245,158,11,0.15)] active:scale-95 overflow-hidden">
+                  <div className="relative p-3 bg-[#0c0c0c]/90 backdrop-blur-md border border-vintage-orange/30 rounded-full shadow-[0_12px_24px_rgba(0,0,0,0.6)] transition-all group-hover:border-vintage-orange group-hover:shadow-[0_0_20px_rgba(245,158,11,0.2)] active:scale-90 overflow-hidden">
                     <ChevronUp className="text-vintage-orange/40 group-hover:text-vintage-orange transition-colors relative z-10" size={20} />
-                    <div className="absolute inset-0 bg-gradient-to-tr from-vintage-orange/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent pointer-events-none" />
                   </div>
-                  <div className="mt-2 flex flex-col items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all transform translate-y-1 group-hover:translate-y-0">
-                    <span className="text-[11px] font-mono text-vintage-orange tracking-[0.3em] uppercase leading-none">
+                  <div className="mt-2 flex flex-col items-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
+                    <span className="text-[10px] font-mono text-vintage-orange/60 tracking-[0.4em] uppercase leading-none">
                       Ascend
                     </span>
-                    <div className="w-4 h-[1px] bg-vintage-orange/20" />
+                    <div className="w-6 h-[1px] bg-vintage-orange/10" />
                   </div>
-                </motion.button>
+                </motion.div>
               )}
             </AnimatePresence>
           </div>
