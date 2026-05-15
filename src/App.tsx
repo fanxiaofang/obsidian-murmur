@@ -35,7 +35,7 @@ interface FilterCondition {
   id: string;
   type: FilterType;
   action: FilterAction;
-  value: any;
+  value: string;
 }
 
 interface Paradigm {
@@ -423,7 +423,7 @@ const TagBadge = ({ name, count, active, onClick }: { name: string; count: numbe
 
 // --- Paradigm Editor Components ---
 
-const DateSelector = ({ value, onChange }: { value: any, onChange: (val: any) => void }) => {
+const DateSelector = ({ value, onChange }: { value: string, onChange: (val: string) => void }) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [calTop, setCalTop] = useState(0);
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -521,7 +521,13 @@ const stopKeyboardPropagation = (event: React.KeyboardEvent<HTMLElement>) => {
   nativeEvent.stopImmediatePropagation?.();
 };
 
-const ParadigmEditor = ({ isOpen, onClose, onSave }: any) => {
+interface ParadigmEditorProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (p: Partial<Paradigm>) => void;
+}
+
+const ParadigmEditor = ({ isOpen, onClose, onSave }: ParadigmEditorProps) => {
   const [draft, setDraft] = React.useState<Partial<Paradigm>>({ name: '', conditions: [] });
 
   React.useEffect(() => {
@@ -534,14 +540,14 @@ const ParadigmEditor = ({ isOpen, onClose, onSave }: any) => {
   };
 
   const addCondition = () => {
-    const newCondition: FilterCondition = { id: Math.random().toString(36).substr(2, 9), type: 'tag', action: 'include', value: '' };
+    const newCondition: FilterCondition = { id: Math.random().toString(36).slice(2, 11), type: 'tag', action: 'include', value: '' };
     setDraft({ ...draft, conditions: [...(draft.conditions || []), newCondition] });
   };
   const updateCondition = (id: string, updates: Partial<FilterCondition>) => {
-    setDraft({ ...draft, conditions: draft.conditions?.map((c: any) => c.id === id ? { ...c, ...updates } : c) });
+    setDraft({ ...draft, conditions: draft.conditions?.map((c) => c.id === id ? { ...c, ...updates } : c) });
   };
   const removeCondition = (id: string) => {
-    setDraft({ ...draft, conditions: draft.conditions?.filter((c: any) => c.id !== id) });
+    setDraft({ ...draft, conditions: draft.conditions?.filter((c) => c.id !== id) });
   };
 
   return (
@@ -599,7 +605,7 @@ const ParadigmEditor = ({ isOpen, onClose, onSave }: any) => {
                           onChange={(e) => {
                             const newType = e.target.value;
                             const defaultActions: Record<string, FilterAction> = { tag: 'include', type: 'is', text: 'include', date: 'is' };
-                            updateCondition(c.id, { type: newType as any, action: defaultActions[newType] || 'include' });
+                            updateCondition(c.id, { type: newType as FilterType, action: defaultActions[newType] || 'include' });
                           }}
                           className="bg-black/40 text-[11px] text-vintage-orange/60 font-mono focus:outline-none cursor-pointer border border-white/5 rounded px-2 py-1"
                         >
@@ -611,7 +617,7 @@ const ParadigmEditor = ({ isOpen, onClose, onSave }: any) => {
                       </div>
                       <select
                         value={c.action}
-                        onChange={(e) => updateCondition(c.id, { action: e.target.value as any })}
+                        onChange={(e) => updateCondition(c.id, { action: e.target.value as FilterAction })}
                         className="bg-black/40 text-[11px] text-vintage-orange/60 font-mono focus:outline-none cursor-pointer border border-white/5 rounded px-2 py-1"
                       >
                         {c.type === 'tag' && <><option value="include" style={{ background: '#1a1a1a', color: '#d1d1d1' }}>包含</option><option value="exclude" style={{ background: '#1a1a1a', color: '#d1d1d1' }}>排除</option></>}
@@ -900,7 +906,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
     if (isFocused) {
       updateHotkeyText();
     }
-    
+
     window.addEventListener('focus', updateHotkeyText);
     return () => window.removeEventListener('focus', updateHotkeyText);
   }, [isFocused, updateHotkeyText]);
@@ -909,9 +915,9 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
     const onQuickSubmit = () => {
       void commitRef.current();
     };
-    app.workspace.on('murmur:quick-submit' as any, onQuickSubmit);
+    app.workspace.on('murmur:quick-submit' as never, onQuickSubmit);
     return () => {
-      app.workspace.off('murmur:quick-submit' as any, onQuickSubmit);
+      app.workspace.off('murmur:quick-submit' as never, onQuickSubmit);
     };
   }, [app]);
 
@@ -984,7 +990,14 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
     return `${parts[0].slice(2)}.${parts[1]}.${parts[2]}`;
   };
 
-  const sidebarHistoryStats = [
+  interface HistoryStat {
+    label: string;
+    value: string | number;
+    unit: string;
+    isDate?: boolean;
+  }
+
+  const sidebarHistoryStats: HistoryStat[] = [
     { label: '总计', value: stats.totalNotes, unit: '篇' },
     { label: '积日', value: stats.totalDays, unit: '日' },
     { label: '连缀', value: stats.streak, unit: '天' },
@@ -1239,7 +1252,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                   <div className="absolute inset-0 bg-gradient-to-br from-vintage-orange/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   <span className="text-[11px] uppercase tracking-[0.2em] text-ink/20 group-hover:text-vintage-orange/40 transition-colors mb-1 relative z-10">{stat.label}</span>
                   <div className="flex items-baseline gap-1 relative z-10">
-                    <span className={`${(stat as any).isDate ? 'text-xs tracking-tighter' : 'text-lg'} font-mono font-bold text-vintage-orange/70 group-hover:text-vintage-orange transition-colors`}>{stat.value}</span>
+                    <span className={`${stat.isDate ? 'text-xs tracking-tighter' : 'text-lg'} font-mono font-bold text-vintage-orange/70 group-hover:text-vintage-orange transition-colors`}>{stat.value}</span>
                     {stat.unit && <span className="text-[10px] font-serif text-ink/10">{stat.unit}</span>}
                   </div>
                 </div>
@@ -1460,8 +1473,14 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
 
                     <div className="relative overflow-hidden">
                       <textarea
-                        className={`w-full px-5 py-4 pb-10 bg-transparent resize-none border-none focus:ring-0 focus:outline-none text-base font-mono text-stone-300/90 placeholder:text-vintage-orange/20 leading-relaxed min-h-[100px] max-h-[40vh] relative z-10 tracking-widest transition-all duration-500 ${isMobile ? '' : 'overflow-y-auto'} scrollbar-hide`}
-                        style={{ height: 'var(--textarea-height, auto)' }}
+                        className={`w-full px-5 py-4 pb-10 resize-none border-none focus:ring-0 focus:outline-none text-base font-mono leading-relaxed min-h-[100px] max-h-[40vh] relative z-10 tracking-widest transition-colors duration-500 ${isMobile ? '' : 'overflow-y-auto'} scrollbar-hide`}
+                        style={{
+                          height: 'var(--textarea-height, auto)',
+                          backgroundColor: 'transparent',
+                          color: 'rgba(214, 211, 209, 0.9)', // stone-300/90
+                          margin: 0,
+                          caretColor: 'rgba(245, 158, 11, 0.95)',
+                        }}
                         placeholder={isFocused ? "" : editingNote ? "editing_buffer_..." : error ? "folder_unset_..." : "此刻，你在想什么..."}
                         onFocus={() => setIsFocused(true)}
                         onBlur={() => setIsFocused(false)}
@@ -1519,21 +1538,38 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                         </button>
 
 
-                        <div className="relative h-full flex items-center">
+                        <div className="relative h-full flex items-center gap-1">
+                          {/* Waves button: open BGM panel */}
                           <button
                             onClick={() => {
                               if (bgmManager) setBgmMenuOpen(v => !v);
                             }}
-                            className="hover:text-vintage-teal transition-all hover:scale-110 active:scale-90 h-full flex items-center group/wav relative"
+                            className="transition-all hover:scale-110 active:scale-90 h-full flex items-center group/wav relative"
+                            style={{ color: bgm.enabled ? '#2DD4BF' : 'rgba(245,158,11,0.3)' }}
                           >
-                            <Waves 
-                              size={14} 
-                              className={`transition-all duration-300 group-hover/wav:text-vintage-teal ${bgm.enabled ? 'text-vintage-teal animate-pulse [filter:drop-shadow(0_0_3px_rgba(45,212,191,0.5))]' : 'text-vintage-orange/30'}`} 
+                            <Waves
+                              size={14}
+                              className={`transition-all duration-300 ${bgm.enabled ? 'animate-pulse [filter:drop-shadow(0_0_3px_rgba(45,212,191,0.5))]' : ''}`}
                             />
                             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-1.5 py-0.5 bg-[#080808] border border-vintage-orange/40 text-[9px] font-sans text-vintage-orange/80 rounded-sm opacity-0 group-hover/wav:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/wav:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.2em] border-solid">
                               夏日雨后
                             </div>
                           </button>
+
+                          {/* Stop button: only shown when BGM is playing */}
+                          {bgm.enabled && (
+                            <button
+                              onClick={() => bgm.toggle()}
+                              className="transition-all hover:scale-110 active:scale-90 flex items-center group/stop relative"
+                              style={{ color: 'rgba(45,212,191,0.5)', background: 'transparent', padding: 0, border: 'none', boxShadow: 'none' }}
+                            >
+                              <X size={10} strokeWidth={2.5} className="hover:text-red-400 transition-colors" />
+                              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-1.5 py-0.5 bg-[#080808] border border-vintage-orange/40 text-[9px] font-sans text-vintage-orange/80 rounded-sm opacity-0 group-hover/stop:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/stop:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.2em] border-solid">
+                                关闭雨声
+                              </div>
+                            </button>
+                          )}
+
                           {bgmMenuOpen && (
                             <BgmControl
                               enabled={bgm.enabled}

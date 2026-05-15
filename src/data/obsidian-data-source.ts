@@ -6,6 +6,7 @@ import {
   parseJournalEntriesFromMarkdown,
   updateEntryInMarkdown,
 } from './entry-parser';
+import type { AppWithInternalPlugins, MarkdownEditorWithScroll } from '../domain/obsidian';
 
 type DailyNotesSettings = {
   folder: string;
@@ -14,7 +15,7 @@ type DailyNotesSettings = {
 };
 
 function getDailyNotesPlugin(app: App) {
-  return (app as any).internalPlugins?.getPluginById?.('daily-notes') ?? null;
+  return (app as AppWithInternalPlugins).internalPlugins?.getPluginById?.('daily-notes') ?? null;
 }
 
 function getDailyNotesSettings(app: App): DailyNotesSettings {
@@ -242,7 +243,7 @@ export function createObsidianDataSource(app: App): MurmurDataSource {
       await leaf.openFile(file);
 
       if (note.startLine && leaf.view instanceof MarkdownView) {
-        const editor = (leaf.view as MarkdownView).editor as any;
+        const editor = (leaf.view as MarkdownView).editor as MarkdownEditorWithScroll;
         const line = Math.max(note.startLine - 1, 0);
 
         if (editor?.setCursor) {

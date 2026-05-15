@@ -10,6 +10,8 @@ jobs:
   build:
     permissions:
       contents: write   # 允许创建 Release 和上传附件
+      id-token: write   # 允许生成和签名 OIDC 令牌
+      attestations: write # 写入证明文件
     runs-on: ubuntu-latest
 
     steps:
@@ -31,10 +33,17 @@ jobs:
           files: |
             dist/main.js
             dist/manifest.json
-            dist/versions.json
             dist/styles.css
           draft: false
           prerelease: false
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+      - name: Generate artifact attestations
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            dist/main.js
+            dist/styles.css

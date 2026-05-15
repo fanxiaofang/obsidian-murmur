@@ -28,7 +28,7 @@ async function runBuild() {
       try {
         copyFileSync(path.join(distDir, 'main.js'), path.join(obsidianPluginDir, 'main.js'));
         copyFileSync(path.join(distDir, 'manifest.json'), path.join(obsidianPluginDir, 'manifest.json'));
-        
+
         if (existsSync(distCss)) {
           copyFileSync(distCss, path.join(obsidianPluginDir, 'styles.css'));
         }
@@ -51,9 +51,6 @@ async function runBuild() {
   mkdirSync(distDir, { recursive: true });
   if (existsSync(path.join(rootDir, 'manifest.json'))) {
     copyFileSync(path.join(rootDir, 'manifest.json'), path.join(distDir, 'manifest.json'));
-  }
-  if (existsSync(path.join(rootDir, 'versions.json'))) {
-    copyFileSync(path.join(rootDir, 'versions.json'), path.join(distDir, 'versions.json'));
   }
 
   // Always run artifact preparation (including renaming css)

@@ -3,13 +3,14 @@ import {createRoot, type Root} from 'react-dom/client';
 import {ItemView, type WorkspaceLeaf} from 'obsidian';
 import AppRoot from '../App';
 import {createObsidianDataSource} from '../data/obsidian-data-source';
+import type { AppWithInternalPlugins, MurmurViewInterface } from '../domain/obsidian';
 
 
 import type MurmurPlugin from '../../main';
 
 export const VIEW_TYPE_MURMUR = 'murmur-view';
 
-export class MurmurView extends ItemView {
+export class MurmurView extends ItemView implements MurmurViewInterface {
   private reactRoot: Root | null = null;
 
   private plugin: MurmurPlugin;
@@ -79,8 +80,8 @@ export class MurmurView extends ItemView {
           dataSource={createObsidianDataSource(this.app)}
           bgmManager={this.plugin.bgmManager}
           onOpenSettings={() => {
-            const setting = (this.app as any).setting;
-            setting?.open();
+            const setting = (this.app as AppWithInternalPlugins).setting;
+            setting?.open?.();
             setting?.openTabById?.('murmur');
           }}
         />

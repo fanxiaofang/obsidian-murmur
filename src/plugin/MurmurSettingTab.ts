@@ -1,5 +1,6 @@
 import { PluginSettingTab, Setting, Notice, type App } from 'obsidian';
 import type MurmurPlugin from '../../main';
+import type { AppWithInternalPlugins, MurmurViewInterface } from '../domain/obsidian';
 
 export class MurmurSettingTab extends PluginSettingTab {
   plugin: MurmurPlugin;
@@ -10,7 +11,7 @@ export class MurmurSettingTab extends PluginSettingTab {
   }
 
   private getDailyNotesPlugin() {
-    return (this.app as any).internalPlugins?.getPluginById?.('daily-notes') ?? null;
+    return (this.app as AppWithInternalPlugins).internalPlugins?.getPluginById?.('daily-notes') ?? null;
   }
 
   display() {
@@ -56,7 +57,7 @@ export class MurmurSettingTab extends PluginSettingTab {
         cls: 'murmur-setting-warning-btn'
       });
       openSettingsBtn.addEventListener('click', () => {
-        (this.app as any).setting?.openTabById?.('daily-notes');
+        (this.app as AppWithInternalPlugins).setting?.openTabById?.('daily-notes');
       });
     }
 
@@ -74,10 +75,14 @@ export class MurmurSettingTab extends PluginSettingTab {
       .setDesc('打开侧边栏机械齿轮旋转与压力表指针摆动的开关（关闭后可降低 GPU 占用）')
       .addToggle((toggle) => {
         toggle.setValue(this.plugin.settings.enableAnimations).onChange(async (value) => {
-          this.plugin.settings.enableAnimations = value;
-          await this.plugin.saveSettings();
-          for (const leaf of this.app.workspace.getLeavesOfType('murmur-view')) {
-            (leaf.view as any).updateAnimationClass?.();
+          try {
+            this.plugin.settings.enableAnimations = value;
+            await this.plugin.saveSettings();
+            for (const leaf of this.app.workspace.getLeavesOfType('murmur-view')) {
+              (leaf.view as MurmurViewInterface).updateAnimationClass?.();
+            }
+          } catch (e) {
+            new Notice('保存设置失败');
           }
         });
       });
@@ -90,8 +95,12 @@ export class MurmurSettingTab extends PluginSettingTab {
       .setDesc('开启后，可以通过输入框底栏信号流图标控制夏日雨后环境音')
       .addToggle((toggle) => {
         toggle.setValue(this.plugin.settings.bgm.enabled).onChange(async (value) => {
-          this.plugin.settings.bgm.enabled = value;
-          await this.plugin.saveSettings();
+          try {
+            this.plugin.settings.bgm.enabled = value;
+            await this.plugin.saveSettings();
+          } catch (e) {
+            new Notice('保存设置失败');
+          }
         });
       });
 
@@ -129,7 +138,7 @@ export class MurmurSettingTab extends PluginSettingTab {
           }
           const views = this.app.workspace.getLeavesOfType('murmur-view');
           for (const leaf of views) {
-            (leaf.view as any).refreshData?.();
+            (leaf.view as MurmurViewInterface).refreshData?.();
           }
           new Notice('已触发 Murmur 数据刷新');
         }));

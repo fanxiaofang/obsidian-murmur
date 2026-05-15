@@ -33,12 +33,12 @@
 }
 
 @layer base {
-  .murmur-plugin-view-container {
-    padding: 0 !important;
-    overflow: hidden !important;
+  .workspace-leaf-content .murmur-plugin-view-container {
+    padding: 0;
+    overflow: hidden;
   }
 
-  .murmur-view {
+  body .murmur-view {
     width: 100%;
     height: 100%;
     /* Default Dark Theme (Refined Charcoal) */
@@ -61,25 +61,25 @@
     }
 
     @apply bg-paper text-ink font-sans selection:bg-vintage-orange/30;
-    background-color: var(--murmur-paper) !important;
-    color: var(--murmur-ink) !important;
+    background-color: var(--murmur-paper);
+    color: var(--murmur-ink);
 
     &.murmur-animations-disabled .animate-murmur-spin,
     &.murmur-animations-disabled .animate-murmur-spin-reverse,
     &.murmur-animations-disabled .animate-murmur-gauge-slow,
     &.murmur-animations-disabled .animate-murmur-gauge-fast {
-      animation: none !important;
+      animation: none;
     }
   }
 
-  .murmur-app-root {
-    display: flex !important;
-    width: 100% !important;
-    height: 100% !important;
-    position: relative !important;
-    overflow: hidden !important;
-    background-color: var(--murmur-paper) !important;
-    color: var(--murmur-ink) !important;
+  body .murmur-app-root {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--murmur-paper);
+    color: var(--murmur-ink);
 
     /* Reset Obsidian's persistent button styles but allow Tailwind overrides */
     button {
@@ -88,7 +88,6 @@
       box-shadow: none;
       padding: 0;
       cursor: pointer;
-      color: inherit;
       font: inherit;
       display: inline-flex;
       align-items: center;
@@ -106,8 +105,9 @@
     transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
   }
 
-  textarea:hover {
-    background-color: rgba(255, 255, 255, 0.01) !important;
+  body .murmur-app-root textarea:hover {
+    background-color: transparent;
+    margin: 0;
   }
 
 
@@ -194,11 +194,11 @@
 
 
   /* 机械动画整体开关：关闭后停止所有齿轮和指针动画 */
-  &.murmur-animations-disabled .animate-murmur-spin,
-  &.murmur-animations-disabled .animate-murmur-spin-reverse,
-  &.murmur-animations-disabled .animate-murmur-gauge-slow,
-  &.murmur-animations-disabled .animate-murmur-gauge-fast {
-    animation: none !important;
+  body .murmur-animations-disabled .animate-murmur-spin,
+  body .murmur-animations-disabled .animate-murmur-spin-reverse,
+  body .murmur-animations-disabled .animate-murmur-gauge-slow,
+  body .murmur-animations-disabled .animate-murmur-gauge-fast {
+    animation: none;
   }
 
 
@@ -286,14 +286,14 @@
     /* 亮冷色 */
   }
 
-  input:focus,
-  textarea:focus {
-    caret-color: rgba(245, 158, 11, 0.95) !important;
+  body .murmur-app-root input:focus,
+  body .murmur-app-root textarea:focus {
+    caret-color: rgba(245, 158, 11, 0.95);
     animation: caret-breathe 1s ease-in-out infinite;
   }
 
-  textarea:focus {
-    caret-shape: block !important;
+  body .murmur-app-root textarea:focus {
+    caret-shape: block;
   }
 
   .text-amber-dim-30 {
@@ -361,13 +361,13 @@
 }
 
 /* Mobile scroll fixes: iOS Safari momentum & sticky compatibility */
-.murmur-app-root.is-mobile-scroll {
+body .murmur-app-root.is-mobile-scroll {
   -webkit-overflow-scrolling: touch;
-  overflow-y: scroll !important;
+  overflow-y: scroll;
 }
 
-.murmur-app-root.is-mobile-scroll textarea {
-  overflow-y: visible !important;
+body .murmur-app-root.is-mobile-scroll textarea {
+  overflow-y: visible;
 }
 /* --- Settings Tab Styles --- */
 .murmur-setting-warning {
@@ -382,24 +382,24 @@
   margin-right: 8px;
 }
 
-.murmur-setting-warning-title {
-  color: var(--text-warning, #eab308) !important;
+.setting-item .murmur-setting-warning-title {
+  color: var(--text-warning, #eab308);
 }
 
-.murmur-setting-warning-desc {
-  margin-top: 8px !important;
+.setting-item .murmur-setting-warning-desc {
+  margin-top: 8px;
 }
 
-.murmur-setting-warning-btn-row {
-  margin-top: 12px !important;
+.setting-item .murmur-setting-warning-btn-row {
+  margin-top: 12px;
 }
 
-.murmur-setting-warning-btn {
-  background: rgba(245, 158, 11, 0.2) !important;
-  color: #eab308 !important;
-  border: 1px solid rgba(245, 158, 11, 0.4) !important;
-  padding: 6px 14px !important;
-  border-radius: 6px !important;
+.setting-item .murmur-setting-warning-btn {
+  background: rgba(245, 158, 11, 0.2);
+  color: #eab308;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  padding: 6px 14px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 13px !important;
+  font-size: 13px;
 }
