@@ -50,6 +50,105 @@
     --murmur-rail: #121214;
     --murmur-contrast: rgba(255, 255, 255, 0.05);
 
+    /* Semantic tokens — adapts to light/dark */
+    --murmur-ink-dim: rgba(209, 209, 209, 0.3);
+    --murmur-sidebar-dim: rgba(242, 237, 228, 0.4);
+    --murmur-note-bg: #1a1a1e;
+    --murmur-note-hover: #252528;
+    --murmur-note-text: rgba(214, 211, 209, 0.9);
+    --murmur-note-glow: rgba(45, 212, 191, 0.15);
+    --murmur-note-hover-glow: rgba(234, 179, 8, 0.2);
+    --murmur-timeline-rail: rgba(255, 255, 255, 0.1);
+    --murmur-terminal-bg: #0c0c0c;
+    --murmur-tooltip-bg: #0c0c0c;
+    --murmur-card-ctrl: rgba(255, 255, 255, 0.2);
+    /* Sidebar section labels */
+    --murmur-section-title: rgba(209, 209, 209, 0.3);
+    --murmur-text-muted: rgba(209, 209, 209, 0.5);
+    --murmur-text-faint: rgba(209, 209, 209, 0.2);
+    /* Sidebar nav item */
+    --murmur-sidebar-active-bg: rgba(255, 255, 255, 0.04);
+    --murmur-sidebar-active-text: #ffffff;
+    --murmur-sidebar-hover-bg: rgba(255, 255, 255, 0.02);
+    --murmur-sidebar-indicator: rgba(255, 255, 255, 0.05);
+    --murmur-sidebar-indicator-hover: rgba(255, 255, 255, 0.2);
+    --murmur-sidebar-indicator-active: rgba(245, 158, 11, 1);
+    --murmur-sidebar-indicator-active-glow: rgba(245, 158, 11, 0.4);
+    /* Controls & icons */
+    --murmur-control-icon: rgba(255, 255, 255, 0.3);
+    --murmur-control-icon-hover: #2DD4BF;
+    --murmur-control-icon-toolbar: rgba(234, 179, 8, 0.3);
+    --murmur-control-icon-toolbar-hover: #2DD4BF;
+    /* Input / form */
+    --murmur-input-bg: rgba(0, 0, 0, 0.4);
+    --murmur-input-border: rgba(255, 255, 255, 0.05);
+    --murmur-input-text: #d1d1d1;
+    --murmur-input-placeholder: #a8a29e;
+    --murmur-form-label: rgba(234, 179, 8, 0.4);
+    --murmur-form-select: rgba(234, 179, 8, 0.6);
+    --murmur-form-accent: #2DD4BF;
+    /* Overlay & menu */
+    --murmur-overlay-bg: rgba(12, 12, 12, 0.95);
+    --murmur-menu-bg: #0c0c0c;
+    --murmur-menu-text: rgba(255, 255, 255, 0.4);
+    --murmur-menu-hover-bg: rgba(45, 212, 191, 0.1);
+    --murmur-menu-hover-text: #2DD4BF;
+    --murmur-menu-hover-bg-teal: rgba(45, 212, 191, 0.1);
+    --murmur-menu-hover-bg-red: rgba(239, 68, 68, 0.1);
+    --murmur-menu-hover-bg-orange: rgba(234, 179, 8, 0.1);
+    --murmur-menu-hover-text-teal: #2DD4BF;
+    --murmur-menu-hover-text-red: #f87171;
+    --murmur-menu-hover-text-orange: #EAB308;
+    --murmur-menu-border: rgba(255, 255, 255, 0.1);
+    /* Timeline */
+    --murmur-timeline-date-text: rgba(120, 113, 108, 0.7);
+    --murmur-timeline-date-hover: rgba(234, 179, 8, 0.8);
+    --murmur-timeline-divider: rgba(234, 179, 8, 0.15);
+    --murmur-timeline-connector: rgba(45, 212, 191, 0.3);
+    --murmur-timeline-node-orbit: #4ad88c;
+     --murmur-timeline-node-orbit-opacity: 0.5;
+     --murmur-timeline-node-orbit-glow: 0 0 4px rgba(45,212,191,0.2);
+    /* Note card internals */
+    --murmur-note-time-text: rgba(120, 113, 108, 0.4);
+    --murmur-note-time-hover: #d6d3d1;
+    --murmur-note-border: rgba(255, 255, 255, 0.05);
+    --murmur-note-ctrl: rgba(255, 255, 255, 0.2);
+    --murmur-note-ctrl-hover: #EAB308;
+    /* Statistics */
+    --murmur-stat-label: rgba(255, 255, 255, 0.2);
+    --murmur-stat-unit: rgba(255, 255, 255, 0.1);
+    --murmur-stat-value: rgba(234, 179, 8, 0.7);
+    --murmur-stat-value-hover: #EAB308;
+    /* Shadows */
+    --murmur-shadow-card: 0 4px 6px rgba(0,0,0,0.3);
+    --murmur-shadow-card-heavy: 0 10px 25px rgba(0,0,0,0.5);
+    --murmur-shadow-menu: 0 10px 25px rgba(0,0,0,0.8);
+    --murmur-shadow-overlay: 0 10px 25px rgba(0,0,0,0.8);
+    /* Section divider */
+    --murmur-section-divider: rgba(255, 255, 255, 0.03);
+    /* Tag badge neutral */
+    --murmur-tag-count: rgba(209, 209, 209, 0.2);
+    --murmur-tag-count-active: rgba(234, 179, 8, 0.6);
+    --murmur-tag-bg-l: 15%;
+    --murmur-tag-bg-opacity: 0.4;
+    --murmur-tag-border-l: 25%;
+    --murmur-tag-border-opacity: 0.2;
+    --murmur-tag-dot-l: 60%;
+    --murmur-tag-dot-opacity: 0.6;
+    --murmur-tag-text-l: 75%;
+    --murmur-tag-text-opacity: 0.5;
+    /* Heatmap overlay text */
+    --murmur-heatmap-scale-text: rgba(234, 179, 8, 0.25);
+    --murmur-heatmap-axis-label: #eab308;
+    /* Terminal status */
+    --murmur-terminal-status-text: rgba(234, 179, 8, 0.3);
+    /* Heatmap wooden frame */
+    --murmur-heatmap-outer: #2a1a10;
+    --murmur-heatmap-outer-border: #1a0f0a;
+    --murmur-heatmap-inner-from: #3d2b1f;
+    --murmur-heatmap-inner-to: #1a110a;
+    --murmur-heatmap-inner-border: #523b2b;
+
     &.theme-light {
       --murmur-paper: #F5F2E9;
       --murmur-sidebar: #EDE9DE;
@@ -58,6 +157,111 @@
       --murmur-border: #DED9C9;
       --murmur-rail: #D8D3C3;
       --murmur-contrast: rgba(0, 0, 0, 0.05);
+      /* Semantic token overrides for light mode */
+      --murmur-ink-dim: rgba(44, 44, 46, 0.55);
+      --murmur-sidebar-dim: rgba(44, 44, 46, 0.6);
+      --murmur-note-bg: #EDEAD8;
+      --murmur-note-hover: #EAE6D8;
+      --murmur-note-text: rgba(44, 44, 46, 0.85);
+      --murmur-note-glow: rgba(180, 83, 9, 0.1);
+      --murmur-note-hover-glow: rgba(13, 148, 136, 0.15);
+      --murmur-timeline-rail: rgba(44, 44, 46, 0.2);
+      --murmur-terminal-bg: #E5DDCB;
+      --murmur-tooltip-bg: #2C2C2E;
+      --murmur-card-ctrl: rgba(44, 44, 46, 0.3);
+      /* Sidebar section labels */
+      --murmur-section-title: rgba(44, 44, 46, 0.65);
+      --murmur-text-muted: rgba(44, 44, 46, 0.55);
+      --murmur-text-faint: rgba(44, 44, 46, 0.35);
+      /* Sidebar nav item */
+      --murmur-sidebar-active-bg: rgba(0, 0, 0, 0.06);
+      --murmur-sidebar-active-text: #1C1C1E;
+      --murmur-sidebar-hover-bg: rgba(0, 0, 0, 0.03);
+      --murmur-sidebar-indicator: rgba(0, 0, 0, 0.08);
+      --murmur-sidebar-indicator-hover: rgba(0, 0, 0, 0.25);
+      --murmur-sidebar-indicator-active: #B45309;
+      --murmur-sidebar-indicator-active-glow: rgba(180, 83, 9, 0.4);
+      /* Controls & icons */
+      --murmur-control-icon: rgba(44, 44, 46, 0.35);
+      --murmur-control-icon-hover: #0d9488;
+      --murmur-control-icon-toolbar: rgba(180, 83, 9, 0.45);
+      --murmur-control-icon-toolbar-hover: #4ad88c;
+      /* Input / form */
+      --murmur-input-bg: rgba(0, 0, 0, 0.06);
+      --murmur-input-border: rgba(0, 0, 0, 0.1);
+      --murmur-input-text: #2C2C2E;
+      --murmur-input-placeholder: #78716c;
+      --murmur-form-label: rgba(180, 83, 9, 0.55);
+      --murmur-form-select: rgba(180, 83, 9, 0.7);
+      --murmur-form-accent: #0d9488;
+      /* Overlay & menu */
+      --murmur-overlay-bg: rgba(44, 31, 14, 0.95);
+      --murmur-menu-bg: #E8E2D2;
+      --murmur-menu-text: rgba(44, 44, 46, 0.6);
+      --murmur-menu-hover-bg: rgba(45, 212, 191, 0.1);
+      --murmur-menu-hover-text: #0d9488;
+      --murmur-menu-hover-bg-teal: rgba(0, 0, 0, 0.06);
+      --murmur-menu-hover-bg-red: rgba(0, 0, 0, 0.06);
+      --murmur-menu-hover-bg-orange: rgba(0, 0, 0, 0.06);
+      --murmur-menu-hover-text-teal: #0f766e;
+      --murmur-menu-hover-text-red: #dc2626;
+      --murmur-menu-hover-text-orange: #b45309;
+      --murmur-menu-border: transparent;
+      /* Timeline */
+      --murmur-timeline-date-text: rgba(44, 44, 46, 0.5);
+      --murmur-timeline-date-hover: rgba(180, 83, 9, 0.8);
+      --murmur-timeline-divider: rgba(180, 83, 9, 0.2);
+      --murmur-timeline-connector: rgba(13, 148, 136, 0.35);
+      --murmur-timeline-node-orbit: #14b8a6;
+      --murmur-timeline-node-orbit-opacity: 1;
+      --murmur-timeline-node-orbit-glow: 0 0 6px rgba(20,184,166,0.5);
+      /* Note card internals */
+      --murmur-note-time-text: rgba(44, 44, 46, 0.4);
+      --murmur-note-time-hover: #44403c;
+      --murmur-note-border: rgba(0, 0, 0, 0.08);
+      --murmur-note-ctrl: rgba(44, 44, 46, 0.25);
+      --murmur-note-ctrl-hover: #B45309;
+      /* Statistics */
+      --murmur-stat-label: rgba(44, 44, 46, 0.55);
+      --murmur-stat-unit: rgba(44, 44, 46, 0.4);
+      --murmur-stat-value: rgba(180, 83, 9, 0.75);
+      --murmur-stat-value-hover: #B45309;
+      /* Shadows */
+      --murmur-shadow-card: 0 2px 8px rgba(0,0,0,0.08);
+      --murmur-shadow-card-heavy: 0 4px 16px rgba(0,0,0,0.1);
+      --murmur-shadow-menu: 0 2px 8px rgba(0,0,0,0.06);
+      --murmur-shadow-overlay: 0 8px 24px rgba(0,0,0,0.15);
+      /* Section divider */
+      --murmur-section-divider: rgba(0, 0, 0, 0.06);
+      /* Tag badge neutral */
+      --murmur-tag-count: rgba(44, 44, 46, 0.3);
+      --murmur-tag-count-active: rgba(180, 83, 9, 0.7);
+      --murmur-tag-bg-l: 85%;
+      --murmur-tag-bg-opacity: 0.55;
+      --murmur-tag-border-l: 65%;
+      --murmur-tag-border-opacity: 0.35;
+      --murmur-tag-dot-l: 40%;
+      --murmur-tag-dot-opacity: 0.7;
+      --murmur-tag-text-l: 28%;
+      --murmur-tag-text-opacity: 0.8;
+      /* Heatmap overlay text */
+      --murmur-heatmap-scale-text: rgba(180, 83, 9, 0.55);
+      --murmur-heatmap-axis-label: #92400e;
+      /* Terminal status */
+      --murmur-terminal-status-text: rgba(180, 83, 9, 0.5);
+      /* Heatmap — aged parchment / warm linen feel */
+      --murmur-heatmap-outer: #C8B48A;
+      --murmur-heatmap-outer-border: #A89060;
+      --murmur-heatmap-inner-from: #D4C4A0;
+      --murmur-heatmap-inner-to: #C0A878;
+      --murmur-heatmap-inner-border: #B09060;
+    }
+
+    .timeline-node-orbit {
+      opacity: var(--murmur-timeline-node-orbit-opacity);
+    }
+    .group:hover .timeline-node-orbit {
+      opacity: 1;
     }
 
     @apply bg-paper text-ink font-sans selection:bg-vintage-orange/30;

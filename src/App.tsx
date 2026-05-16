@@ -116,14 +116,14 @@ const MURMUR_COLORS = {
   orange: '#f59e0b',        // 橙色 (用于警示、特殊高亮)
 
   // --- 容器与背景 ---
-  cardBg: '#1a1a1e',        // 笔记卡片基础背景色
-  cardHover: '#252528',     // 笔记卡片悬浮时的加深背景色
+  cardBg: 'var(--murmur-note-bg)',        // 笔记卡片基础背景色
+  cardHover: 'var(--murmur-note-hover)',     // 笔记卡片悬浮时的加深背景色
   sidebar: '#141414',       // 侧边栏背景
   paper: '#0c0c0c',         // 主笔记区背景深色
 
   // --- 文字与墨水 ---
   ink: '#d1d1d1',           // 墨水白 (主要文字颜色)
-  inkDim: 'rgba(209,209,209,0.3)', // 调暗的文字
+  inkDim: 'var(--murmur-ink-dim)', // 调暗的文字
 
   // --- 透明度与辅助色 ---
   border: 'rgba(255,255,255,0.05)', // 通用极细边框
@@ -222,14 +222,14 @@ const getDynamicTagStyle = (name: string, active: boolean) => {
   return {
     className: 'border-transparent hover:bg-[var(--murmur-card)] hover:border-vintage-orange/20',
     style: {
-      backgroundColor: `hsla(${h}, 35%, 15%, 0.4)`,
-      borderColor: `hsla(${h}, 35%, 25%, 0.2)`,
+      backgroundColor: `hsla(${h}, 35%, var(--murmur-tag-bg-l, 15%), var(--murmur-tag-bg-opacity, 0.4))`,
+      borderColor: `hsla(${h}, 35%, var(--murmur-tag-border-l, 25%), var(--murmur-tag-border-opacity, 0.2))`,
     },
     dotStyle: {
-      backgroundColor: `hsla(${h}, 60%, 60%, 0.6)`,
+      backgroundColor: `hsla(${h}, 60%, var(--murmur-tag-dot-l, 60%), var(--murmur-tag-dot-opacity, 0.6))`,
     },
     textStyle: {
-      color: `hsla(${h}, 40%, 75%, 0.5)`,
+      color: `hsla(${h}, 40%, var(--murmur-tag-text-l, 75%), var(--murmur-tag-text-opacity, 0.5))`,
     }
   };
 };
@@ -309,9 +309,11 @@ const ViewItem = ({
       className={`
       flex items-center justify-between px-4 py-3 cursor-pointer transition-all duration-500 group relative rounded-lg mx-1 overflow-visible
       ${active
-          ? 'bg-white/[0.04] shadow-[0_4px_12px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.05)] text-white'
-          : 'hover:bg-white/[0.02] text-ink/40'}
-    `}>
+          ? 'bg-[var(--murmur-sidebar-active-bg)] text-[var(--murmur-sidebar-active-text)]'
+          : 'hover:bg-[var(--murmur-sidebar-hover-bg)] text-[var(--murmur-sidebar-dim)]'}
+    `}
+      style={active ? { boxShadow: 'var(--murmur-shadow-card), inset 0 1px 1px var(--murmur-contrast)' } : undefined}
+    >
       {/* Background Decorative Element */}
       <div className={`absolute inset-0 bg-gradient-to-r from-vintage-orange/5 to-transparent transition-opacity duration-700 rounded-lg ${active ? 'opacity-100' : 'opacity-0 group-hover:opacity-40'}`} />
 
@@ -319,9 +321,9 @@ const ViewItem = ({
       <div className={`
         absolute left-0 top-2 bottom-2 transition-all duration-500 rounded-r z-20
         ${active
-          ? 'w-[3px] bg-vintage-orange shadow-[0_0_12px_rgba(245,158,11,0.4)]'
-          : 'w-[1px] bg-white/5 group-hover:bg-white/20 group-hover:w-[2px]'}
-      `} />
+          ? 'w-[3px] bg-vintage-orange'
+          : 'w-[1px] bg-[var(--murmur-sidebar-indicator)] group-hover:bg-[var(--murmur-sidebar-indicator-hover)] group-hover:w-[2px]'}
+      `} style={active ? { boxShadow: '0 0 12px var(--murmur-sidebar-indicator-active-glow)' } : undefined} />
 
       <div className="flex items-center gap-3 relative z-10 transition-transform duration-500 group-hover:translate-x-1">
         <span className={`text-sm tracking-wide transition-all duration-300 ${active ? 'font-bold opacity-100' : 'group-hover:text-ink/90'} uppercase font-serif`}>
@@ -332,8 +334,8 @@ const ViewItem = ({
       <div className="flex items-center gap-3 relative z-10">
         <span className={`
           text-[11px] font-mono transition-all duration-500
-          ${active ? 'text-vintage-orange font-black scale-110' : 'text-ink/20 group-hover:text-ink/60'}
-        `}>
+          ${active ? 'text-vintage-orange font-black scale-110' : 'group-hover:text-[var(--murmur-text-muted)]'}
+        `} style={active ? undefined : { color: 'var(--murmur-text-faint)' }}>
           {count.toString().padStart(2, '0')}
         </span>
 
@@ -344,7 +346,8 @@ const ViewItem = ({
                 e.stopPropagation();
                 setShowMenu(!showMenu);
               }}
-              className="p-1 hover:bg-white/10 rounded transition-all opacity-0 group-hover:opacity-100 text-ink/30 hover:text-vintage-teal"
+              className="p-1 hover:bg-[var(--murmur-sidebar-hover-bg)] rounded transition-all opacity-0 group-hover:opacity-100 hover:text-[var(--murmur-control-icon-hover)]"
+              style={{ color: 'var(--murmur-control-icon)' }}
             >
               <MoreHorizontal size={14} />
             </button>
@@ -360,7 +363,8 @@ const ViewItem = ({
                   {onPin && (
                     <button
                       onClick={(e) => { e.stopPropagation(); onPin(); setShowMenu(false); }}
-                      className="px-3 py-1.5 text-[11px] text-left hover:bg-white/5 flex items-center gap-2 text-ink/60 hover:text-white transition-colors"
+                      className="px-3 py-1.5 text-[11px] text-left hover:bg-[var(--murmur-sidebar-hover-bg)] flex items-center gap-2 transition-colors"
+                      style={{ color: 'var(--murmur-text-muted)' }}
                     >
                       <ChevronUp size={12} />
                       置顶
@@ -369,7 +373,7 @@ const ViewItem = ({
                   {onDelete && (
                     <button
                       onClick={(e) => { e.stopPropagation(); onDelete(); setShowMenu(false); }}
-                      className="px-3 py-1.5 text-[11px] text-left hover:bg-white/5 flex items-center gap-2 text-red-400 hover:text-red-300 transition-colors"
+                      className="px-3 py-1.5 text-[11px] text-left hover:bg-[var(--murmur-sidebar-hover-bg)] flex items-center gap-2 text-red-400 hover:text-red-300 transition-colors"
                     >
                       <Trash2 size={12} />
                       删除
@@ -413,7 +417,7 @@ const TagBadge = ({ name, count, active, onClick }: { name: string; count: numbe
       >
         {name}
       </span>
-      <span className={`text-[10px] font-mono ${active ? 'text-vintage-orange/60' : 'text-ink/20 group-hover:text-ink/40'} ml-0.5`}>
+      <span className={`text-[10px] font-mono group-hover:text-[var(--murmur-sidebar-dim)] ml-0.5`} style={{ color: active ? 'var(--murmur-tag-count-active)' : 'var(--murmur-tag-count)' }}>
         {count}
       </span>
     </div>
@@ -456,10 +460,10 @@ const DateSelector = ({ value, onChange }: { value: string, onChange: (val: stri
       <div
         ref={triggerRef}
         onClick={() => openCalendar()}
-        className="flex items-center gap-2 px-3 py-1.5 bg-black/40 border border-white/5 rounded hover:border-vintage-orange/30 cursor-pointer transition-all"
+        className="flex items-center gap-2 px-3 py-1.5 bg-[var(--murmur-input-bg)] border border-[var(--murmur-input-border)] rounded hover:border-vintage-orange/30 cursor-pointer transition-all"
       >
         <Calendar size={14} className="text-vintage-orange/60" />
-        <span className="text-[11px] text-stone-400 font-mono">
+        <span className="text-[11px] font-mono" style={{ color: 'var(--murmur-input-placeholder)' }}>
           {typeof value === 'string' ? presets.find(p => p.value === value)?.label || value || '选择日期...' : '选择日期...'}
         </span>
       </div>
@@ -472,15 +476,16 @@ const DateSelector = ({ value, onChange }: { value: string, onChange: (val: stri
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              className="z-[300] flex bg-[#0c0c0c] border border-white/10 rounded-lg shadow-2xl overflow-hidden"
-              style={{ position: 'fixed', top: calTop, left: '50%', marginLeft: '-200px' }}
+              className="z-[300] flex bg-[var(--murmur-terminal-bg)] border border-[var(--murmur-menu-border)] rounded-lg shadow-2xl overflow-hidden"
+              style={{ position: 'fixed', top: calTop, left: '50%', marginLeft: '-200px', boxShadow: 'var(--murmur-shadow-menu)' }}
             >
-              <div className="w-32 border-r border-white/5 py-2 bg-white/[0.02]">
+              <div className="w-32 border-r border-[var(--murmur-input-border)] py-2 bg-[var(--murmur-sidebar-hover-bg)]">
                 {presets.map(p => (
                   <button
                     key={p.value}
                     onClick={() => { onChange(p.value); setShowCalendar(false); }}
-                    className="w-full px-4 py-2 text-left text-[11px] text-stone-500 hover:text-vintage-orange hover:bg-vintage-orange/5 transition-all font-mono"
+                    className="w-full px-4 py-2 text-left text-[11px] hover:text-vintage-orange hover:bg-vintage-orange/5 transition-all font-mono"
+                    style={{ color: 'var(--murmur-text-muted)' }}
                   >
                     {p.label}
                   </button>
@@ -489,7 +494,7 @@ const DateSelector = ({ value, onChange }: { value: string, onChange: (val: stri
               <div className="p-4 w-64">
                 <div className="grid grid-cols-7 gap-1 text-center">
                   {['日', '一', '二', '三', '四', '五', '六'].map(d => (
-                    <span key={d} className="text-[10px] text-stone-600 mb-2">{d}</span>
+                    <span key={d} className="text-[10px] mb-2" style={{ color: 'var(--murmur-text-faint)' }}>{d}</span>
                   ))}
                   {Array.from({ length: daysInMonth }).map((_, i) => {
                     const day = i + 1;
@@ -499,7 +504,8 @@ const DateSelector = ({ value, onChange }: { value: string, onChange: (val: stri
                       <button
                         key={i}
                         onClick={() => { onChange(dateStr); setShowCalendar(false); }}
-                        className={`aspect-square flex items-center justify-center text-[11px] rounded hover:bg-vintage-orange/20 hover:text-vintage-orange transition-all font-mono ${isToday ? 'bg-vintage-orange/10 text-vintage-orange border border-vintage-orange/30' : 'text-stone-400'}`}
+                        className={`aspect-square flex items-center justify-center text-[11px] rounded hover:bg-vintage-orange/20 hover:text-vintage-orange transition-all font-mono ${isToday ? 'bg-vintage-orange/10 text-vintage-orange border border-vintage-orange/30' : ''}`}
+                        style={isToday ? undefined : { color: 'var(--murmur-input-placeholder)' }}
                       >
                         {day}
                       </button>
@@ -558,47 +564,49 @@ const ParadigmEditor = ({ isOpen, onClose, onSave }: ParadigmEditorProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-[#0c0c0c]/95"
+            className="absolute inset-0 bg-[var(--murmur-terminal-bg)]/95"
             onClick={onClose}
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="paradigm-editor-modal relative z-10 w-full max-w-2xl bg-[#0c0c0c] border border-vintage-orange/20 rounded-xl shadow-[0_10px_25px_rgba(0,0,0,0.8)]"
+            className="paradigm-editor-modal relative z-10 w-full max-w-2xl bg-[var(--murmur-terminal-bg)] border border-vintage-orange/20 rounded-xl"
+            style={{ boxShadow: 'var(--murmur-shadow-overlay)' }}
             onClick={(e) => e.stopPropagation()}
             onKeyDownCapture={stopKeyboardPropagation}
           >
-            <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+            <div className="px-6 py-4 border-b border-[var(--murmur-input-border)] flex items-center justify-between bg-[var(--murmur-sidebar-hover-bg)]">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-vintage-orange/10 rounded-lg"><Plus className="text-vintage-orange" size={18} /></div>
                 <div>
                   <h2 className="text-lg font-serif font-bold text-vintage-orange tracking-wider">锻造新范式</h2>
-                  <p className="text-[10px] text-stone-500 uppercase tracking-widest">Forge New Search Paradigm</p>
+                  <p className="text-[10px] uppercase tracking-widest" style={{ color: 'var(--murmur-input-placeholder)' }}>Forge New Search Paradigm</p>
                 </div>
               </div>
-              <button onClick={onClose} className="text-stone-500 hover:text-white transition-colors"><X size={20} /></button>
+              <button onClick={onClose} className="transition-colors" style={{ color: 'var(--murmur-input-placeholder)' }}><X size={20} /></button>
             </div>
             <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto scrollbar-hide">
               <div className="space-y-2">
-                <label className="text-[11px] text-vintage-orange/40 uppercase tracking-[0.2em] ml-1">范式名称</label>
+                <label className="text-[11px] uppercase tracking-[0.2em] ml-1" style={{ color: 'var(--murmur-form-label)' }}>范式名称</label>
                 <input
                   type="text"
                   value={draft.name || ''}
                   onChange={(e) => setDraft({ ...draft, name: e.target.value })}
                   placeholder="输入范式名称..."
-                  className="w-full bg-black/40 border border-white/5 rounded-lg px-4 py-3 text-stone-300 focus:outline-none focus:border-vintage-orange/40 transition-all font-mono native-key-bindings"
+                  className="w-full bg-[var(--murmur-input-bg)] border border-[var(--murmur-input-border)] rounded-lg px-4 py-3 focus:outline-none focus:border-vintage-orange/40 transition-all font-mono native-key-bindings"
+                  style={{ color: 'var(--murmur-input-text)' }}
                   autoFocus
                 />
               </div>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <label className="text-[11px] text-vintage-orange/40 uppercase tracking-[0.2em] ml-1">筛选器链</label>
-                  <button onClick={addCondition} className="flex items-center gap-2 text-[10px] text-vintage-teal hover:text-teal-300 transition-colors font-bold uppercase tracking-widest"><Plus size={12} /> 添加检索条件</button>
+                  <label className="text-[11px] uppercase tracking-[0.2em] ml-1" style={{ color: 'var(--murmur-form-label)' }}>筛选器链</label>
+                  <button onClick={addCondition} className="flex items-center gap-2 text-[10px] hover:text-teal-300 transition-colors font-bold uppercase tracking-widest" style={{ color: 'var(--murmur-form-accent)' }}><Plus size={12} /> 添加检索条件</button>
                 </div>
                 <div className="space-y-3">
                   {draft.conditions?.map((c: FilterCondition) => (
-                    <div key={c.id} className="group flex items-center gap-3 p-3 bg-white/[0.02] border border-white/5 rounded-lg">
+                    <div key={c.id} className="group flex items-center gap-3 p-3 bg-[var(--murmur-sidebar-hover-bg)] border border-[var(--murmur-input-border)] rounded-lg">
                       <div className="flex items-center gap-2 min-w-[100px]">
                         <select
                           value={c.type}
@@ -607,7 +615,8 @@ const ParadigmEditor = ({ isOpen, onClose, onSave }: ParadigmEditorProps) => {
                             const defaultActions: Record<string, FilterAction> = { tag: 'include', type: 'is', text: 'include', date: 'is' };
                             updateCondition(c.id, { type: newType as FilterType, action: defaultActions[newType] || 'include' });
                           }}
-                          className="bg-black/40 text-[11px] text-vintage-orange/60 font-mono focus:outline-none cursor-pointer border border-white/5 rounded px-2 py-1"
+                          className="bg-[var(--murmur-input-bg)] text-[11px] font-mono focus:outline-none cursor-pointer border border-[var(--murmur-input-border)] rounded px-2 py-1"
+                          style={{ color: 'var(--murmur-form-select)' }}
                         >
                           <option value="tag" style={{ background: '#1a1a1a', color: '#d1d1d1' }}>标签</option>
                           <option value="type" style={{ background: '#1a1a1a', color: '#d1d1d1' }}>类型</option>
@@ -618,7 +627,8 @@ const ParadigmEditor = ({ isOpen, onClose, onSave }: ParadigmEditorProps) => {
                       <select
                         value={c.action}
                         onChange={(e) => updateCondition(c.id, { action: e.target.value as FilterAction })}
-                        className="bg-black/40 text-[11px] text-vintage-orange/60 font-mono focus:outline-none cursor-pointer border border-white/5 rounded px-2 py-1"
+                        className="bg-[var(--murmur-input-bg)] text-[11px] font-mono focus:outline-none cursor-pointer border border-[var(--murmur-input-border)] rounded px-2 py-1"
+                        style={{ color: 'var(--murmur-form-select)' }}
                       >
                         {c.type === 'tag' && <><option value="include" style={{ background: '#1a1a1a', color: '#d1d1d1' }}>包含</option><option value="exclude" style={{ background: '#1a1a1a', color: '#d1d1d1' }}>排除</option></>}
                         {c.type === 'type' && <><option value="is" style={{ background: '#1a1a1a', color: '#d1d1d1' }}>是</option><option value="isNot" style={{ background: '#1a1a1a', color: '#d1d1d1' }}>不是</option></>}
@@ -632,14 +642,16 @@ const ParadigmEditor = ({ isOpen, onClose, onSave }: ParadigmEditorProps) => {
                             value={c.value || ''}
                             onChange={(e) => updateCondition(c.id, { value: e.target.value })}
                             placeholder="输入标签..."
-                            className="w-full bg-black/40 border border-white/5 rounded px-3 py-1.5 text-[11px] text-stone-400 font-mono native-key-bindings"
+                            className="w-full bg-[var(--murmur-input-bg)] border border-[var(--murmur-input-border)] rounded px-3 py-1.5 text-[11px] font-mono native-key-bindings"
+                            style={{ color: 'var(--murmur-input-placeholder)' }}
                           />
                         )}
                         {c.type === 'type' && (
                           <select
                             value={c.value}
                             onChange={(e) => updateCondition(c.id, { value: e.target.value })}
-                            className="w-full bg-black/40 border border-white/5 rounded px-3 py-1.5 text-[11px] text-stone-400 font-mono"
+                            className="w-full bg-[var(--murmur-input-bg)] border border-[var(--murmur-input-border)] rounded px-3 py-1.5 text-[11px] font-mono"
+                            style={{ color: 'var(--murmur-input-placeholder)' }}
                           >
                             <option value="" style={{ background: '#1a1a1a', color: '#d1d1d1' }}>选择类型...</option>
                             <option value="link" style={{ background: '#1a1a1a', color: '#d1d1d1' }}>有链接</option>
@@ -653,20 +665,21 @@ const ParadigmEditor = ({ isOpen, onClose, onSave }: ParadigmEditorProps) => {
                             value={c.value || ''}
                             onChange={(e) => updateCondition(c.id, { value: e.target.value })}
                             placeholder="匹配文本..."
-                            className="w-full bg-black/40 border border-white/5 rounded px-3 py-1.5 text-[11px] text-stone-400 font-mono native-key-bindings"
+                            className="w-full bg-[var(--murmur-input-bg)] border border-[var(--murmur-input-border)] rounded px-3 py-1.5 text-[11px] font-mono native-key-bindings"
+                            style={{ color: 'var(--murmur-input-placeholder)' }}
                           />
                         )}
                         {c.type === 'date' && <DateSelector value={c.value} onChange={(val) => updateCondition(c.id, { value: val })} />}
                       </div>
-                      <button onClick={() => removeCondition(c.id)} className="p-1.5 text-stone-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all"><Trash2 size={14} /></button>
+                      <button onClick={() => removeCondition(c.id)} className="p-1.5 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all" style={{ color: 'var(--murmur-text-faint)' }}><Trash2 size={14} /></button>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
-            <div className="p-6 border-t border-white/5 bg-white/[0.01] flex items-center justify-between">
-              <button onClick={onClose} className="text-[11px] font-mono text-stone-500 hover:text-white uppercase tracking-widest">Cancel</button>
-              <button onClick={handleSave} disabled={!draft.name?.trim()} className={`px-8 py-2 rounded border font-mono font-bold text-[11px] tracking-[0.2em] uppercase transition-all ${draft.name?.trim() ? 'bg-vintage-orange/10 border-vintage-orange/40 text-vintage-orange hover:bg-vintage-orange hover:text-black' : 'bg-transparent border-white/5 text-white/10 cursor-not-allowed'}`}>Start_Forge</button>
+            <div className="p-6 border-t border-[var(--murmur-input-border)] bg-[var(--murmur-sidebar-hover-bg)] flex items-center justify-between">
+              <button onClick={onClose} className="text-[11px] font-mono uppercase tracking-widest" style={{ color: 'var(--murmur-input-placeholder)' }}>Cancel</button>
+              <button onClick={handleSave} disabled={!draft.name?.trim()} className={`px-8 py-2 rounded border font-mono font-bold text-[11px] tracking-[0.2em] uppercase transition-all ${draft.name?.trim() ? 'bg-vintage-orange/10 border-vintage-orange/40 text-vintage-orange hover:bg-vintage-orange hover:text-black' : 'bg-transparent border-[var(--murmur-input-border)] cursor-not-allowed'}`} style={!draft.name?.trim() ? { color: 'var(--murmur-text-faint)' } : undefined}>Start_Forge</button>
             </div>
           </motion.div>
         </div>
@@ -959,8 +972,8 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
     }
   }, [dataSource, editingNote?.id, refresh, textareaRef]);
 
-  const noteCardBaseShadow = 'inset 0 1px 0 rgba(255,255,255,0.02), 0 10px 25px rgba(0,0,0,0.5)';
-  const noteCardHoverShadow = `inset 0 1px 0 rgba(255,255,255,0.03), ${noteCardBaseShadow}, 0 0 10px ${MURMUR_COLORS.glowGold}`;
+  const noteCardBaseShadow = 'inset 0 1px 0 var(--murmur-contrast), var(--murmur-shadow-card-heavy)';
+  const noteCardHoverShadow = `inset 0 1px 0 var(--murmur-contrast), var(--murmur-shadow-card-heavy), 0 0 10px var(--murmur-note-hover-glow)`;
 
   const clearEditingBuffer = useCallback(() => {
     setEditingNote(null);
@@ -1080,11 +1093,11 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                 {/* Always show Settings */}
                 <button
                   onClick={onOpenSettings}
-                  className="text-amber-dim-30 hover:text-vintage-orange/60 transition-all p-2 hover:bg-white/[0.02] rounded-lg border border-transparent relative group/settings"
+                  className="text-amber-dim-30 hover:text-vintage-orange/60 transition-all p-2 hover:bg-[var(--murmur-sidebar-hover-bg)] rounded-lg border border-transparent relative group/settings"
                 >
                   <Settings size={16} strokeWidth={1.5} />
 
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-[#0c0c0c] border border-vintage-orange/40 border-solid text-[10px] font-sans text-vintage-orange/70 rounded-sm opacity-0 group-hover/settings:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/settings:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.15em]">
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-[var(--murmur-terminal-bg)] border border-vintage-orange/40 border-solid text-[10px] font-sans text-vintage-orange/70 rounded-sm opacity-0 group-hover/settings:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/settings:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.15em]">
                     Settings
                   </div>
                 </button>
@@ -1099,7 +1112,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                       <ChevronLeft size={16} strokeWidth={3} className="group-hover/retract:-translate-x-0.5 transition-transform" />
                       <div className="w-[1.5px] h-3 bg-current opacity-20 ml-1 rounded-full group-hover/retract:opacity-60 transition-opacity" />
                     </div>
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-[#0c0c0c] border border-vintage-orange/40 border-solid text-[10px] font-sans text-vintage-orange/70 rounded-sm opacity-0 group-hover/retract:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/retract:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.15em]">
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-[var(--murmur-terminal-bg)] border border-vintage-orange/40 border-solid text-[10px] font-sans text-vintage-orange/70 rounded-sm opacity-0 group-hover/retract:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/retract:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.15em]">
                       收起侧栏
                     </div>
                   </button>
@@ -1110,15 +1123,15 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
 
           {/* 炽频时序计量台 (Heatmap) */}
           <div className="space-y-4">
-            <div className="text-[11px] uppercase tracking-[0.25em] font-bold px-1 flex items-center gap-2.5 transition-colors group-hover:text-ink" style={{ color: MURMUR_COLORS.inkDim }}>
+            <div className="text-[11px] uppercase tracking-[0.25em] font-bold px-1 flex items-center gap-2.5 transition-colors" style={{ color: 'var(--murmur-section-title)' }}>
               <Activity size={14} strokeWidth={2.5} />
               <span>炽频时序计量台</span>
             </div>
 
             {/* Wooden Frame & Brass Panel Container */}
-            <div className="p-1 rounded-sm bg-[#2a1a10] shadow-[0_4px_12px_rgba(0,0,0,0.4),inset_0_1px_2px_rgba(255,255,255,0.05)] border-2 border-[#1a0f0a] relative group/heatmap">
+            <div className="p-1 rounded-sm bg-[var(--murmur-heatmap-outer)] shadow-[0_4px_12px_rgba(0,0,0,0.4),inset_0_1px_2px_rgba(255,255,255,0.05)] border-2 border-[var(--murmur-heatmap-outer-border)] relative group/heatmap">
               {/* Brass Panel Background — rivets in corners, grid contained inside them */}
-              <div className="p-5 bg-gradient-to-br from-[#3d2b1f] to-[#1a110a] rounded-[1px] border border-[#523b2b] relative overflow-hidden shadow-inner">
+              <div className="p-5 bg-gradient-to-br from-[var(--murmur-heatmap-inner-from)] to-[var(--murmur-heatmap-inner-to)] rounded-[1px] border border-[var(--murmur-heatmap-inner-border)] relative overflow-hidden shadow-inner">
 
                 {/* Panel Rivets — corner decorations, z-10 to stay above grid */}
                 <div
@@ -1145,7 +1158,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                 <div className="flex relative z-10 w-full">
                   <div
                     className="flex flex-col justify-between py-0.5 opacity-0 w-0 group-hover/heatmap:opacity-100 group-hover/heatmap:w-3 group-hover/heatmap:mr-1 transition-all duration-500 font-serif text-[11px] pointer-events-none select-none overflow-hidden flex-shrink-0"
-                    style={{ color: MURMUR_COLORS.gold, filter: `drop-shadow(0 0 3px ${MURMUR_COLORS.gold}80)` }}
+                    style={{ color: 'var(--murmur-heatmap-axis-label)', filter: 'drop-shadow(0 0 3px var(--murmur-heatmap-axis-label))' }}
                   >
                     <span className="h-[12px] flex items-center justify-end">日</span>
                     <span className="h-[12px] flex items-center justify-end"></span>
@@ -1192,7 +1205,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                 </div>
               </div>
             </div>
-            <div className="px-1 flex items-center justify-between text-[10px] font-mono tracking-[0.25em] uppercase text-vintage-orange/25">
+            <div className="px-1 flex items-center justify-between text-[10px] font-mono tracking-[0.25em] uppercase" style={{ color: 'var(--murmur-heatmap-scale-text)' }}>
               <span>Low</span>
               <div className="flex items-center gap-1">
                 <div className="w-3 h-[3px] rounded-full bg-[var(--murmur-sidebar)] border border-[var(--murmur-border)]" />
@@ -1206,7 +1219,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
 
           {/* Navigation (寻溯范式) */}
           <div className="space-y-3">
-            <div className="text-[11px] uppercase tracking-[0.25em] font-bold px-1 flex items-center justify-between group/header" style={{ color: MURMUR_COLORS.inkDim }}>
+            <div className="text-[11px] uppercase tracking-[0.25em] font-bold px-1 flex items-center justify-between group/header" style={{ color: 'var(--murmur-section-title)' }}>
               <div className="flex items-center gap-2.5">
                 <Telescope size={14} strokeWidth={2.5} />
                 <span>寻溯范式</span>
@@ -1217,7 +1230,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                 style={{ color: MURMUR_COLORS.teal }}
               >
                 <Plus size={14} />
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-[#0c0c0c] border border-vintage-orange/40 border-solid text-[10px] font-sans font-normal text-vintage-orange/70 rounded-sm opacity-0 group-hover/new-p:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/new-p:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.15em]">
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-[var(--murmur-terminal-bg)] border border-vintage-orange/40 border-solid text-[10px] font-sans font-normal text-vintage-orange/70 rounded-sm opacity-0 group-hover/new-p:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/new-p:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.15em]">
                   {canAddParadigm ? '新增范式' : `已达上限 ${MAX_PARADIGMS} 个`}
                 </div>
               </button>
@@ -1242,7 +1255,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
 
           {/* 辰衡统纪 (Chronos Balance Statistics) */}
           <div className="space-y-3">
-            <div className="text-[11px] uppercase tracking-[0.25em] font-bold px-1 flex items-center gap-2.5" style={{ color: MURMUR_COLORS.inkDim }}>
+            <div className="text-[11px] uppercase tracking-[0.25em] font-bold px-1 flex items-center gap-2.5" style={{ color: 'var(--murmur-section-title)' }}>
               <Gauge size={14} strokeWidth={2.5} />
               <span>辰衡统纪</span>
             </div>
@@ -1250,10 +1263,10 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
               {sidebarHistoryStats.map(stat => (
                 <div key={stat.label} className="bg-[var(--murmur-card)] border border-[var(--murmur-border)] rounded-lg p-3 flex flex-col items-center justify-center group hover:bg-[var(--murmur-border)] hover:border-vintage-orange/30 transition-all shadow-[inset_0_1px_4px_var(--murmur-contrast)] relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-vintage-orange/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <span className="text-[11px] uppercase tracking-[0.2em] text-ink/20 group-hover:text-vintage-orange/40 transition-colors mb-1 relative z-10">{stat.label}</span>
+                  <span className="text-[11px] uppercase tracking-[0.2em] group-hover:text-vintage-orange/40 transition-colors mb-1 relative z-10" style={{ color: 'var(--murmur-stat-label)' }}>{stat.label}</span>
                   <div className="flex items-baseline gap-1 relative z-10">
-                    <span className={`${stat.isDate ? 'text-xs tracking-tighter' : 'text-lg'} font-mono font-bold text-vintage-orange/70 group-hover:text-vintage-orange transition-colors`}>{stat.value}</span>
-                    {stat.unit && <span className="text-[10px] font-serif text-ink/10">{stat.unit}</span>}
+                    <span className={`${stat.isDate ? 'text-xs tracking-tighter' : 'text-lg'} font-mono font-bold transition-colors`} style={{ color: 'var(--murmur-stat-value)' }}>{stat.value}</span>
+                    {stat.unit && <span className="text-[10px] font-serif" style={{ color: 'var(--murmur-stat-unit)' }}>{stat.unit}</span>}
                   </div>
                 </div>
               ))}
@@ -1262,7 +1275,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
 
           {/* Taxonomy (榜列机枢) */}
           <div className="flex-1 space-y-3 min-h-0 flex flex-col">
-            <div className="text-[11px] uppercase tracking-[0.25em] font-bold px-1 flex items-center justify-between" style={{ color: MURMUR_COLORS.inkDim }}>
+            <div className="text-[11px] uppercase tracking-[0.25em] font-bold px-1 flex items-center justify-between" style={{ color: 'var(--murmur-section-title)' }}>
               <div className="flex items-center gap-2.5">
                 <Compass size={14} strokeWidth={2.5} />
                 <span>榜列机枢</span>
@@ -1411,11 +1424,11 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                 >
                   {/* Inner Container: Handles borders, background, and corner clipping */}
                   <div className={`
-                    relative bg-[#0c0c0c] border border-white/10 rounded-xl transition-all duration-700 shadow-[0_0_1px_rgba(255,255,255,0.03)]
+                    relative bg-[var(--murmur-terminal-bg)] border border-[var(--murmur-menu-border)] rounded-xl transition-all duration-700
                     ${isFocused || isSubmitting ? 'border-vintage-orange/40' : ''}
                   `}>
                     {/* Terminal Header Bar */}
-                    <div className="flex items-center justify-between px-4 py-1.5 border-b border-vintage-orange/10 bg-white/[0.04] relative z-20 rounded-t-xl">
+                    <div className="flex items-center justify-between px-4 py-1.5 border-b border-vintage-orange/10 bg-[var(--murmur-sidebar-active-bg)] relative z-20 rounded-t-xl">
                       <div className="flex items-center gap-3">
                         {isNarrow && !isSidebarOpen && (
                           <button
@@ -1429,7 +1442,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                               <div className="w-[1.2px] h-2.5 bg-current opacity-20 mr-0.5 rounded-full group-hover/toggle:opacity-60 transition-opacity" />
                               <ChevronRight size={12} strokeWidth={3} className="group-hover/toggle:translate-x-0.5 transition-transform" />
                             </div>
-                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-[#0c0c0c] border border-vintage-orange/40 border-solid text-[10px] font-sans text-vintage-orange/70 rounded-sm opacity-0 group-hover/toggle:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/toggle:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.15em]">
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-[var(--murmur-terminal-bg)] border border-vintage-orange/40 border-solid text-[10px] font-sans text-vintage-orange/70 rounded-sm opacity-0 group-hover/toggle:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/toggle:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.15em]">
                               召唤侧栏
                             </div>
                           </button>
@@ -1453,7 +1466,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                               className="relative !bg-transparent !border-none !shadow-none p-0 text-vintage-teal/50 hover:text-vintage-orange transition-all flex-shrink-0 group/clear"
                             >
                               <X size={11} />
-                              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-[#0c0c0c] border border-vintage-orange/40 border-solid text-[10px] font-sans text-vintage-orange/70 rounded-sm opacity-0 group-hover/clear:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/clear:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.15em]">
+                              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-[var(--murmur-terminal-bg)] border border-vintage-orange/40 border-solid text-[10px] font-sans text-vintage-orange/70 rounded-sm opacity-0 group-hover/clear:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/clear:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.15em]">
                                 清除范式筛选
                               </div>
                             </button>
@@ -1462,7 +1475,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="h-[1px] w-4 bg-vintage-orange/20"></div>
-                        <span className="text-[11px] font-mono text-vintage-orange/30 tracking-[0.3em] uppercase">
+                        <span className="text-[11px] font-mono tracking-[0.3em] uppercase" style={{ color: 'var(--murmur-terminal-status-text)' }}>
                           {isMobile
                             ? consoleStatusText.replace(/(?:Input_Console_|Edit_Buffer_|Folder_Not_|Committing_|Vault_)/g, '')
                             : consoleStatusText}
@@ -1477,7 +1490,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                         style={{
                           height: 'var(--textarea-height, auto)',
                           backgroundColor: 'transparent',
-                          color: 'rgba(214, 211, 209, 0.9)', // stone-300/90
+                          color: 'var(--murmur-note-text)', // stone-300/90
                           margin: 0,
                           caretColor: 'rgba(245, 158, 11, 0.95)',
                         }}
@@ -1518,21 +1531,27 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                     absolute bottom-2 right-6 z-20 flex items-center gap-2 transition-all duration-500
                     ${isFocused ? 'opacity-40 translate-y-0' : 'opacity-0 translate-y-1'}
                   `}>
-                        <span className="text-[11px] font-mono text-vintage-orange tracking-tighter">
-                          [ <span className="text-vintage-orange font-bold px-1 select-none">{hotkeyText}</span> ] TO COMMIT
+                        <span className="text-[11px] font-mono tracking-tighter" style={{ color: 'var(--murmur-terminal-status-text)' }}>
+                          [ <span className="font-bold px-1 select-none" style={{ color: 'var(--murmur-terminal-status-text)' }}>{hotkeyText}</span> ] TO COMMIT
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between px-4 py-1.5 bg-white/[0.04] border-t border-vintage-orange/10 relative z-20 h-9 rounded-b-xl">
+                    <div className="flex items-center justify-between px-4 py-1.5 bg-[var(--murmur-sidebar-active-bg)] border-t border-vintage-orange/10 relative z-20 h-9 rounded-b-xl">
                       <div className="flex items-center gap-5 text-vintage-orange/30 h-full">
                         {/* Hash / Tag Button */}
                         <button
                           onClick={handleAddHash}
                           className="transition-all hover:scale-110 active:scale-95 group/btn relative h-full flex items-center"
                         >
-                          <Hash size={14} className="text-vintage-orange/30 group-hover/btn:text-vintage-teal transition-colors duration-300" />
-                          <div className="absolute bottom-full left-0 mb-3 px-1.5 py-0.5 bg-[#080808] border border-vintage-orange/40 text-[9px] font-sans text-vintage-orange/80 rounded-sm opacity-0 group-hover/btn:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/btn:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.2em] border-solid">
+                          <Hash
+                            size={14}
+                            className="transition-colors duration-300"
+                            style={{ color: 'var(--murmur-control-icon-toolbar)' }}
+                            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--murmur-control-icon-toolbar-hover)'; }}
+                            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--murmur-control-icon-toolbar)'; }}
+                          />
+                          <div className="absolute bottom-full left-0 mb-3 px-1.5 py-0.5 bg-[var(--murmur-tooltip-bg)] border border-vintage-orange/40 text-[9px] font-sans text-vintage-orange/80 rounded-sm opacity-0 group-hover/btn:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/btn:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.2em] border-solid">
                             插入标签
                           </div>
                         </button>
@@ -1545,13 +1564,13 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                               if (bgmManager) setBgmMenuOpen(v => !v);
                             }}
                             className="transition-all hover:scale-110 active:scale-90 h-full flex items-center group/wav relative"
-                            style={{ color: bgm.enabled ? '#2DD4BF' : 'rgba(245,158,11,0.3)' }}
+                            style={{ color: bgm.enabled ? '#2DD4BF' : 'var(--murmur-control-icon-toolbar)' }}
                           >
                             <Waves
                               size={14}
                               className={`transition-all duration-300 ${bgm.enabled ? 'animate-pulse [filter:drop-shadow(0_0_3px_rgba(45,212,191,0.5))]' : ''}`}
                             />
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-1.5 py-0.5 bg-[#080808] border border-vintage-orange/40 text-[9px] font-sans text-vintage-orange/80 rounded-sm opacity-0 group-hover/wav:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/wav:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.2em] border-solid">
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-1.5 py-0.5 bg-[var(--murmur-tooltip-bg)] border border-vintage-orange/40 text-[9px] font-sans text-vintage-orange/80 rounded-sm opacity-0 group-hover/wav:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/wav:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.2em] border-solid">
                               夏日雨后
                             </div>
                           </button>
@@ -1564,7 +1583,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                               style={{ color: 'rgba(45,212,191,0.5)', background: 'transparent', padding: 0, border: 'none', boxShadow: 'none' }}
                             >
                               <X size={10} strokeWidth={2.5} className="hover:text-red-400 transition-colors" />
-                              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-1.5 py-0.5 bg-[#080808] border border-vintage-orange/40 text-[9px] font-sans text-vintage-orange/80 rounded-sm opacity-0 group-hover/stop:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/stop:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.2em] border-solid">
+                              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-1.5 py-0.5 bg-[var(--murmur-tooltip-bg)] border border-vintage-orange/40 text-[9px] font-sans text-vintage-orange/80 rounded-sm opacity-0 group-hover/stop:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/stop:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.2em] border-solid">
                                 关闭雨声
                               </div>
                             </button>
@@ -1601,9 +1620,10 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                           px-4 py-1 rounded-sm border font-mono font-bold text-[10px] tracking-widest transition-all uppercase flex items-center gap-2 h-[26px]
                           ${inputText.trim() && !isSubmitting
                                 ? 'bg-transparent border-vintage-orange/30 text-vintage-orange/30 hover:bg-vintage-orange hover:text-black hover:border-vintage-orange hover:shadow-[0_0_8px_rgba(245,158,11,0.4)] active:scale-95 cursor-pointer'
-                                : 'bg-transparent border-white/5 text-white/10 cursor-default'
+                                : 'bg-transparent border-[var(--murmur-input-border)] cursor-default'
                               }
                         `}
+                          style={!(inputText.trim() && !isSubmitting) ? { color: 'var(--murmur-text-faint)' } : undefined}
                           >
                             {(!inputText.trim() || isSubmitting) ? (
                               <Lock size={10} className="text-stone-600" />
@@ -1614,7 +1634,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                           </button>
 
                           {(!inputText.trim() || isSubmitting) && !isSubmitting && (
-                            <div className="absolute bottom-full right-0 mb-3 px-2 py-1 bg-[#0c0c0c] border border-red-400/40 border-solid text-[10px] font-sans text-red-400/80 rounded-sm opacity-0 group-hover/commit:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/commit:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.15em]">
+                            <div className="absolute bottom-full right-0 mb-3 px-2 py-1 bg-[var(--murmur-terminal-bg)] border border-red-400/40 border-solid text-[10px] font-sans text-red-400/80 rounded-sm opacity-0 group-hover/commit:opacity-100 pointer-events-none transition-all duration-200 translate-y-1 group-hover/commit:translate-y-0 whitespace-nowrap z-50 shadow-2xl tracking-[0.15em]">
                               请输入有效内容
                             </div>
                           )}
@@ -1640,7 +1660,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                   <div className="flex items-center gap-2 mt-0">
                     <div className="px-2 py-0.5 flex items-center gap-2 border-none">
                       <div className={`status-blinker ${isLoading ? 'opacity-100' : 'opacity-70'} ${error ? 'bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.8)]' : ''}`} />
-                      <p className="text-[11px] uppercase tracking-[0.4em] text-vintage-orange/30 font-mono font-bold">{timelineStatusText}</p>
+                      <p className="text-[11px] uppercase tracking-[0.4em] font-mono font-bold" style={{ color: 'var(--murmur-terminal-status-text)' }}>{timelineStatusText}</p>
                     </div>
                   </div>
                 </div>
@@ -1652,7 +1672,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
           <div className="relative space-y-2">
             {/* Timeline Rail */}
             <div className="absolute left-[8px] top-10 bottom-10 w-[6px] pointer-events-none z-10">
-              <div className="absolute left-1/2 -translate-x-1/2 w-[1.5px] h-full bg-[#ffffff1a]" />
+              <div className="absolute left-1/2 -translate-x-1/2 w-[1.5px] h-full bg-[var(--murmur-timeline-rail)]" />
             </div>
 
             {Object.entries(visibleGroupedNotes).map(([date, dayNotes], groupIdx) => {
@@ -1671,10 +1691,10 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                 >
                   {!isTodayGroup && (
                     <div className="flex items-center gap-4 mb-0 relative z-10">
-                      <div className="flex items-center gap-2 font-mono text-[13px] font-bold text-stone-500/70 bg-transparent py-2 tracking-[0.15em] whitespace-nowrap group-hover:text-vintage-orange/80 transition-colors pl-[48px]">
+                      <div className="flex items-center gap-2 font-mono text-[13px] font-bold bg-transparent py-2 tracking-[0.15em] whitespace-nowrap transition-colors pl-[48px]" style={{ color: 'var(--murmur-timeline-date-text)' }}>
                         <span>{formatDateDisplay(date)}</span>
                       </div>
-                      <div className="h-[1px] flex-1 bg-gradient-to-r from-vintage-border/40 to-transparent rounded-full mt-1"></div>
+                      <div className="h-[1px] flex-1 bg-gradient-to-r from-[var(--murmur-timeline-divider)] to-transparent rounded-full mt-1"></div>
                     </div>
                   )}
 
@@ -1693,8 +1713,8 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                         <div className={`absolute -left-[37px] top-[20px] ${['w-[14px] h-[14px]', 'w-[18px] h-[18px]', 'w-[16px] h-[16px]'][noteIdx % 3]} -translate-x-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none z-50`}>
                           {/* Outer Orbit (Teal) */}
                           <div
-                            className="absolute inset-0 rounded-full border-1 border-solid opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 shadow-[0_0_4px_rgba(45,212,191,0.2)]"
-                            style={{ borderColor: MURMUR_COLORS.teal }}
+                            className="absolute inset-0 rounded-full border-1 border-solid timeline-node-orbit group-hover:scale-110 transition-all duration-700"
+                            style={{ borderColor: 'var(--murmur-timeline-node-orbit)', boxShadow: 'var(--murmur-timeline-node-orbit-glow)' }}
                           />
 
                           {/* Inner Orbit (Gold Semi-circle SVG) */}
@@ -1721,12 +1741,12 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                         </div>
 
                         {/* Connection line: node → card edge (hover) */}
-                        <div className="absolute -left-[31px] top-[20px] w-[28px] h-px bg-vintage-teal/30 opacity-0 group-hover:opacity-100 transition-all duration-500 z-30 pointer-events-none" />
+                        <div className="absolute -left-[31px] top-[20px] w-[28px] h-px opacity-0 group-hover:opacity-100 transition-all duration-500 z-30 pointer-events-none" style={{ backgroundColor: 'var(--murmur-timeline-connector)' }} />
 
                         <div
-                          className={`border border-white/5 border-solid border-l-[3px] rounded-md px-6 py-2.5 transition-all duration-500 relative min-h-0 h-auto overflow-visible ${activeMenuId === note.id ? 'z-50' : 'z-10'}`}
+                          className={`border border-[var(--murmur-note-border)] border-solid border-l-[3px] rounded-md px-6 py-2.5 transition-all duration-500 relative min-h-0 h-auto overflow-visible ${activeMenuId === note.id ? 'z-50' : 'z-10'}`}
                           style={isMobile
-                            ? { backgroundColor: MURMUR_COLORS.cardBg, borderLeftColor: MURMUR_COLORS.teal, boxShadow: '0 4px 6px rgba(0,0,0,0.3)' }
+                            ? { backgroundColor: MURMUR_COLORS.cardBg, borderLeftColor: MURMUR_COLORS.teal, boxShadow: 'var(--murmur-shadow-card)' }
                             : { backgroundColor: MURMUR_COLORS.cardBg, borderLeftColor: MURMUR_COLORS.teal, boxShadow: noteCardBaseShadow }}
                           onMouseEnter={(e) => {
                             if (isMobile) return;
@@ -1749,7 +1769,8 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                                 e.stopPropagation();
                                 setActiveMenuId(activeMenuId === note.id ? null : note.id);
                               }}
-                              className="p-1 rounded-md hover:bg-white/5 text-white/20 hover:text-vintage-orange transition-all active:scale-90 opacity-0 group-hover:opacity-100"
+                              className="p-1 rounded-md hover:bg-[var(--murmur-sidebar-hover-bg)] hover:text-[var(--murmur-note-ctrl-hover)] transition-all active:scale-90 opacity-0 group-hover:opacity-100"
+                              style={{ color: 'var(--murmur-note-ctrl)' }}
                             >
                               <MoreVertical size={14} />
                             </button>
@@ -1772,7 +1793,8 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                                     initial={{ opacity: 0, scale: 0.95, y: -10 }}
                                     animate={{ opacity: 1, scale: 1, y: 0 }}
                                     exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                                    className="absolute right-0 mt-1 w-32 bg-[#0c0c0c]/95 border border-white/10 rounded-lg shadow-[0_10px_25px_rgba(0,0,0,0.8)] z-20 py-1 overflow-hidden"
+                                    className="absolute right-0 mt-1 w-32 bg-[var(--murmur-menu-bg)] border border-[var(--murmur-menu-border)] rounded-lg z-20 py-1 overflow-hidden"
+                                    style={{ boxShadow: 'var(--murmur-shadow-menu)' }}
                                   >
                                     <button
                                       onClick={(e) => {
@@ -1780,7 +1802,10 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                                         handleStartEdit(note);
                                         closeMenu();
                                       }}
-                                      className="w-full px-3 py-2.5 flex items-center gap-2 text-[11px] text-white/40 hover:bg-vintage-teal/10 hover:text-vintage-teal transition-all duration-300 font-mono group/edit"
+                                      className="w-full px-3 py-2.5 flex items-center gap-2 text-[11px] hover:bg-[var(--murmur-menu-hover-bg-teal)] transition-all duration-300 font-mono group/edit"
+                                      style={{ color: 'var(--murmur-menu-text)' }}
+                                      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--murmur-menu-hover-text-teal)'; }}
+                                      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--murmur-menu-text)'; }}
                                     >
                                       <Pencil size={12} className="opacity-40 group-hover/edit:opacity-100" />
                                       <span>调校</span>
@@ -1792,7 +1817,10 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                                         void handleDeleteEntry(note);
                                         closeMenu();
                                       }}
-                                      className="w-full px-3 py-2.5 flex items-center gap-2 text-[11px] text-white/40 hover:bg-red-500/10 hover:text-red-400 transition-all duration-300 font-mono group/del"
+                                      className="w-full px-3 py-2.5 flex items-center gap-2 text-[11px] hover:bg-[var(--murmur-menu-hover-bg-red)] transition-all duration-300 font-mono group/del"
+                                      style={{ color: 'var(--murmur-menu-text)' }}
+                                      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--murmur-menu-hover-text-red)'; }}
+                                      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--murmur-menu-text)'; }}
                                     >
                                       <Trash2 size={12} className="opacity-40 group-hover/del:opacity-100" />
                                       <span>清档</span>
@@ -1805,7 +1833,10 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                                         void handleOpenNote(note);
                                         closeMenu();
                                       }}
-                                      className="w-full px-3 py-2.5 flex items-center gap-2 text-[11px] text-white/40 hover:bg-vintage-orange/10 hover:text-vintage-orange transition-all duration-300 font-mono group/jump"
+                                      className="w-full px-3 py-2.5 flex items-center gap-2 text-[11px] hover:bg-[var(--murmur-menu-hover-bg-orange)] transition-all duration-300 font-mono group/jump"
+                                      style={{ color: 'var(--murmur-menu-text)' }}
+                                      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--murmur-menu-hover-text-orange)'; }}
+                                      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--murmur-menu-text)'; }}
                                     >
                                       <Compass size={12} className="opacity-40 group-hover/jump:opacity-100" />
                                       <span>溯源</span>
@@ -1821,14 +1852,14 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                             {/* Terminal Header: Minimal Timestamp */}
                             <div className="flex items-center mb-0.5 relative z-20">
                               <div className="flex items-center gap-2 group-hover:translate-x-0.5 transition-transform duration-500 pl-0.5">
-                                <span className="font-mono text-sm text-stone-500/40 group-hover:text-stone-300 tracking-[0.2em] font-bold uppercase transition-colors whitespace-nowrap">
+                                <span className="font-mono text-sm tracking-[0.2em] font-bold uppercase transition-colors whitespace-nowrap" style={{ color: 'var(--murmur-note-time-text)' }}>
                                   {note.time}
                                 </span>
                               </div>
                             </div>
 
                             <div className="relative pl-0.5">
-                              <p className="font-mono font-light text-base leading-snug text-stone-300/90 group-hover:text-ink transition-all duration-500 whitespace-pre-wrap selection:bg-vintage-orange/20">
+                              <p className="font-mono font-light text-base leading-snug text-[var(--murmur-note-text)] group-hover:text-ink transition-all duration-500 whitespace-pre-wrap selection:bg-vintage-orange/20">
                                 {note.content.split(/(#[^\s#]+)/g).map((part, i) =>
                                   part.startsWith('#') ? (
                                     <span key={i} className="inline-flex items-center font-serif px-2 py-0.5 rounded bg-vintage-teal/20 text-vintage-teal shadow-[0_0_4px_rgba(45,212,191,0.15)] mx-0.5 transition-colors">
@@ -1852,7 +1883,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
               <div className="flex justify-center pt-4 pb-2">
                 <button
                   onClick={handleLoadMoreDays}
-                  className="px-8 py-2.5 border border-vintage-orange/20 rounded-lg bg-[#0c0c0c] text-vintage-orange/60 hover:text-vintage-orange hover:border-vintage-orange/40 transition-all font-mono text-[11px] tracking-[0.2em] uppercase"
+                  className="px-8 py-2.5 border border-vintage-orange/20 rounded-lg bg-[var(--murmur-terminal-bg)] text-vintage-orange/60 hover:text-vintage-orange hover:border-vintage-orange/40 transition-all font-mono text-[11px] tracking-[0.2em] uppercase"
                 >
                   加载更早条目 · 还有 {totalDayCount - visibleDayCount} 天
                 </button>
@@ -1888,7 +1919,7 @@ export default function App({ app, dataSource, bgmManager = null, onOpenSettings
                   role="button"
                   className="pointer-events-auto flex flex-col items-center group cursor-pointer"
                 >
-                  <div className="relative p-3 bg-[#0c0c0c]/90 backdrop-blur-md border border-vintage-orange/30 rounded-full shadow-[0_12px_24px_rgba(0,0,0,0.6)] transition-all group-hover:border-vintage-orange group-hover:shadow-[0_0_20px_rgba(245,158,11,0.2)] active:scale-90 overflow-hidden">
+                  <div className="relative p-3 bg-[var(--murmur-terminal-bg)]/90 backdrop-blur-md border border-vintage-orange/30 rounded-full shadow-[0_12px_24px_rgba(0,0,0,0.6)] transition-all group-hover:border-vintage-orange group-hover:shadow-[0_0_20px_rgba(245,158,11,0.2)] active:scale-90 overflow-hidden">
                     <ChevronUp className="text-vintage-orange/40 group-hover:text-vintage-orange transition-colors relative z-10" size={20} />
                     <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent pointer-events-none" />
                   </div>

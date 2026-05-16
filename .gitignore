@@ -4,3 +4,4 @@ dist/
 coverage/
 .DS_Store
 *.log
+light_mode_*.md
