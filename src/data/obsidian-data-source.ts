@@ -133,6 +133,7 @@ export function createObsidianDataSource(app: App): MurmurDataSource {
         throw new Error('尚未设置日记存放目录，请前往 Obsidian 设置 → 日记插件 进行配置。');
       }
 
+      // 从日记目录中提取时间戳条目以生成时间轴，仅读取 daily notes folder 内的文件
       const files = app.vault.getMarkdownFiles().filter((file) => {
         if (folder && !file.path.startsWith(`${folder}/`)) {
           return false;
