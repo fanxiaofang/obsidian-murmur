@@ -6,7 +6,8 @@
 
 A retro-terminal style inner monologue recorder for Obsidian. Amidst the silent rotation of mechanical gears, turning murmurs into energy fragments.
 
-![Murmur Preview](./images/preview.png)
+![Murmur Preview (Dark)](./images/preview.png)
+![Murmur Preview (Light)](./images/preview-light.png)
 
 ## Features
 
@@ -35,7 +36,7 @@ Murmur uses a unique set of terminologies to describe its functional components:
 ### Community Store (Recommended)
 1. Open Obsidian **Settings**.
 2. Go to **Community plugins** and click **Browse**.
-3. Search for **Murmur**.
+3. Search for **yeelen-Murmur**.
 4. Click **Install**, then **Enable**.
 
 ### Manual Installation
@@ -61,10 +62,10 @@ In the plugin settings, you can:
 ---
 
 <a name="chinese"></a>
-
 ## 简体中文
 
-![Murmur 预览](./images/preview.png)
+![Murmur 预览（深色模式）](./images/preview.png)
+![Murmur 预览（浅色模式）](./images/preview-light.png)
 
 为Obsidian 设计的复古终端式内心独白记录，在无声转动的机械齿轮中，把呢喃低语化为能量碎片
 
@@ -95,7 +96,7 @@ Murmur 使用了一套独特的术语来描述其功能组件：
 ### 社区插件市场 (推荐)
 1. 打开 Obsidian **设置**。
 2. 前往 **社区插件** 并点击 **浏览**。
-3. 搜索 **Murmur**。
+3. 搜索 **yeelen-Murmur**。
 4. 点击 **安装**，然后 **启用**。
 
 ### 手动安装
